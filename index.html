@@ -3,36 +3,43 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Pokédex Forge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root {
-  --bg: #0f1119;
-  --bg2: #181b27;
-  --bg3: #1e2233;
-  --surface: #252a3a;
-  --border: #2e3450;
-  --text: #e8eaf0;
-  --text2: #9ca3bf;
-  --accent: #e8453c;
-  --accent2: #ff6b63;
-  --accent-glow: rgba(232,69,60,0.25);
-  --success: #34d399;
-  --warn: #fbbf24;
-  --radius: 8px;
+  --bg: #08090d;
+  --bg2: #0e1017;
+  --bg3: #14161f;
+  --surface: #1a1d2a;
+  --surface2: #212535;
+  --border: #252940;
+  --border-subtle: #1c1f30;
+  --text: #dfe2ec;
+  --text2: #7d839e;
+  --text3: #4a4f6a;
+  --accent: #e04040;
+  --accent2: #ff5c5c;
+  --accent-glow: rgba(224,64,64,0.2);
+  --accent-glow2: rgba(224,64,64,0.08);
+  --success: #2dd4a0;
+  --success-glow: rgba(45,212,160,0.15);
+  --warn: #f5b731;
+  --radius: 10px;
+  --radius-sm: 6px;
   --font-display: 'Chakra Petch', sans-serif;
   --font-body: 'Outfit', sans-serif;
+  --shadow: 0 2px 20px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.6);
 
-/* Pokemon type colors */
-–type-normal: #a8a878; –type-fire: #f08030; –type-water: #6890f0;
-–type-electric: #f8d030; –type-grass: #78c850; –type-ice: #98d8d8;
-–type-fighting: #c03028; –type-poison: #a040a0; –type-ground: #e0c068;
-–type-flying: #a890f0; –type-psychic: #f85888; –type-bug: #a8b820;
-–type-rock: #b8a038; –type-ghost: #705898; –type-dragon: #7038f8;
-–type-dark: #705848; –type-steel: #b8b8d0; –type-fairy: #ee99ac;
+–type-normal: #b0b088; –type-fire: #f58535; –type-water: #6395f5;
+–type-electric: #fad535; –type-grass: #6ec040; –type-ice: #7ed8d8;
+–type-fighting: #d03030; –type-poison: #b050b0; –type-ground: #dbb860;
+–type-flying: #a090f0; –type-psychic: #ff5088; –type-bug: #a8b820;
+–type-rock: #c0a030; –type-ghost: #7060a8; –type-dragon: #7540ff;
+–type-dark: #806858; –type-steel: #b8b8d8; –type-fairy: #f0a0b8;
 }
 html,body{height:100%;overflow:hidden}
 body{
@@ -47,20 +54,36 @@ flex-direction:column;
 header {
 background: var(–bg2);
 border-bottom: 1px solid var(–border);
-padding: 12px 24px;
+padding: 10px 20px;
 display: flex;
 align-items: center;
-gap: 16px;
+gap: 14px;
 flex-shrink: 0;
 z-index: 100;
 }
+.logo-area { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+width: 28px; height: 28px;
+background: conic-gradient(var(–accent) 0deg, #ff7a5c 120deg, var(–accent) 360deg);
+border-radius: 50%;
+position: relative;
+flex-shrink: 0;
+}
+.logo-icon::after {
+content: ‘’;
+position: absolute;
+inset: 6px;
+background: var(–bg2);
+border-radius: 50%;
+border: 2px solid var(–accent);
+}
 header h1 {
 font-family: var(–font-display);
-font-size: 1.4rem;
+font-size: 1.25rem;
 font-weight: 700;
-letter-spacing: 2px;
+letter-spacing: 2.5px;
 text-transform: uppercase;
-background: linear-gradient(135deg, var(–accent), #ff9472);
+background: linear-gradient(135deg, var(–accent2), #ff9472);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 white-space: nowrap;
@@ -68,12 +91,12 @@ white-space: nowrap;
 .header-controls {
 display: flex;
 align-items: center;
-gap: 12px;
+gap: 10px;
 margin-left: auto;
 flex-wrap: wrap;
 }
 .header-controls label {
-font-size: 0.8rem;
+font-size: 0.75rem;
 color: var(–text2);
 display: flex;
 align-items: center;
@@ -81,14 +104,14 @@ gap: 6px;
 white-space: nowrap;
 }
 .header-controls input[type=“number”] {
-width: 60px;
+width: 56px;
 background: var(–bg3);
 border: 1px solid var(–border);
 color: var(–text);
-padding: 4px 8px;
-border-radius: var(–radius);
+padding: 5px 8px;
+border-radius: var(–radius-sm);
 font-family: var(–font-body);
-font-size: 0.85rem;
+font-size: 0.8rem;
 text-align: center;
 }
 .header-controls input[type=“number”]:focus {
@@ -98,32 +121,33 @@ box-shadow: 0 0 0 2px var(–accent-glow);
 }
 .btn {
 font-family: var(–font-display);
-font-size: 0.8rem;
+font-size: 0.72rem;
 font-weight: 600;
 letter-spacing: 1px;
 text-transform: uppercase;
-padding: 8px 16px;
+padding: 7px 14px;
 border: none;
-border-radius: var(–radius);
+border-radius: var(–radius-sm);
 cursor: pointer;
 transition: all 0.15s;
 white-space: nowrap;
+min-height: 34px;
+display: inline-flex;
+align-items: center;
+gap: 5px;
 }
-.btn-primary {
-background: var(–accent);
-color: #fff;
-}
-.btn-primary:hover { background: var(–accent2); transform: translateY(-1px); }
+.btn-primary { background: var(–accent); color: #fff; }
+.btn-primary:hover { background: var(–accent2); box-shadow: 0 2px 12px var(–accent-glow); }
 .btn-secondary {
 background: var(–surface);
-color: var(–text);
+color: var(–text2);
 border: 1px solid var(–border);
 }
-.btn-secondary:hover { background: var(–bg3); border-color: var(–accent); }
+.btn-secondary:hover { color: var(–text); border-color: var(–accent); }
 .btn-danger {
 background: transparent;
 color: var(–accent);
-border: 1px solid var(–accent);
+border: 1px solid rgba(224,64,64,0.3);
 }
 .btn-danger:hover { background: var(–accent); color: #fff; }
 
@@ -132,12 +156,66 @@ border: 1px solid var(–accent);
 display: flex;
 flex: 1;
 overflow: hidden;
+position: relative;
 }
 
-/* ── LEFT PANEL: Selector ── */
+/* ── COLLAPSIBLE PANEL SYSTEM ── */
+.panel-toggle {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 10px 16px;
+background: var(–surface);
+border-bottom: 1px solid var(–border);
+cursor: pointer;
+user-select: none;
+min-height: 44px;
+-webkit-tap-highlight-color: transparent;
+}
+.panel-toggle:hover { background: var(–surface2); }
+.panel-toggle h2 {
+font-family: var(–font-display);
+font-size: 0.8rem;
+font-weight: 600;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+color: var(–text2);
+display: flex;
+align-items: center;
+}
+.panel-toggle .toggle-arrow {
+width: 18px; height: 18px;
+color: var(–text3);
+transition: transform 0.25s ease;
+flex-shrink: 0;
+}
+.panel-toggle.collapsed-state .toggle-arrow {
+transform: rotate(-90deg);
+}
+.panel-badge {
+font-family: var(–font-display);
+font-size: 0.6rem;
+background: var(–accent);
+color: #fff;
+padding: 2px 7px;
+border-radius: 10px;
+margin-left: 8px;
+}
+.collapsible-body {
+transition: max-height 0.3s ease, opacity 0.2s ease;
+opacity: 1;
+overflow: hidden;
+}
+.collapsible-body.collapsed {
+max-height: 0 !important;
+opacity: 0;
+overflow: hidden;
+}
+
+/* ── LEFT PANEL ── */
 .panel-left {
-width: 320px;
-min-width: 260px;
+width: 310px;
+min-width: 240px;
 background: var(–bg2);
 border-right: 1px solid var(–border);
 display: flex;
@@ -146,31 +224,41 @@ flex-shrink: 0;
 overflow: hidden;
 }
 .search-area {
-padding: 16px;
-border-bottom: 1px solid var(–border);
+padding: 12px 14px;
+border-bottom: 1px solid var(–border-subtle);
+}
+.search-wrap { position: relative; }
+.search-wrap .search-icon {
+position: absolute;
+left: 12px; top: 50%;
+transform: translateY(-50%);
+width: 14px; height: 14px;
+color: var(–text3);
+pointer-events: none;
 }
 .search-area input {
 width: 100%;
-padding: 10px 14px;
+padding: 10px 14px 10px 36px;
 background: var(–bg);
 border: 1px solid var(–border);
 border-radius: var(–radius);
 color: var(–text);
 font-family: var(–font-body);
-font-size: 0.9rem;
+font-size: 0.85rem;
+transition: border-color 0.15s, box-shadow 0.15s;
 }
 .search-area input:focus {
 outline: none;
 border-color: var(–accent);
-box-shadow: 0 0 0 2px var(–accent-glow);
+box-shadow: 0 0 0 3px var(–accent-glow);
 }
-.search-area input::placeholder { color: var(–text2); }
+.search-area input::placeholder { color: var(–text3); }
 .pokemon-list {
 flex: 1;
 overflow-y: auto;
-padding: 8px;
+padding: 6px;
 }
-.pokemon-list::-webkit-scrollbar { width: 6px; }
+.pokemon-list::-webkit-scrollbar { width: 5px; }
 .pokemon-list::-webkit-scrollbar-track { background: transparent; }
 .pokemon-list::-webkit-scrollbar-thumb { background: var(–border); border-radius: 3px; }
 
@@ -178,99 +266,94 @@ padding: 8px;
 display: flex;
 align-items: center;
 gap: 10px;
-padding: 8px 12px;
-border-radius: var(–radius);
+padding: 7px 10px;
+border-radius: var(–radius-sm);
 cursor: pointer;
-transition: background 0.12s;
+transition: background 0.1s;
 user-select: none;
 min-height: 44px;
+border: 1px solid transparent;
 }
 .poke-option:hover { background: var(–surface); }
-.poke-option.selected { background: var(–bg3); border: 1px solid var(–accent); }
+.poke-option:active { background: var(–surface2); }
 .poke-option .poke-id {
 font-family: var(–font-display);
-font-size: 0.75rem;
-color: var(–text2);
-min-width: 36px;
+font-size: 0.7rem;
+color: var(–text3);
+min-width: 34px;
 }
 .poke-option .poke-name {
-font-size: 0.9rem;
+font-size: 0.85rem;
 font-weight: 500;
 text-transform: capitalize;
 flex: 1;
 }
-.poke-option .poke-types {
-display: flex;
-gap: 4px;
-}
+.poke-option .poke-types { display: flex; gap: 4px; }
 .type-dot {
-width: 10px; height: 10px;
+width: 9px; height: 9px;
 border-radius: 50%;
 flex-shrink: 0;
+box-shadow: 0 0 4px rgba(0,0,0,0.3);
 }
 .poke-option .poke-add-icon {
-font-size: 1.1rem;
+font-size: 1rem;
 color: var(–success);
 opacity: 0;
-transition: opacity 0.12s;
+transition: opacity 0.1s;
+font-weight: 700;
 }
 .poke-option:hover .poke-add-icon { opacity: 1; }
-.poke-option.in-dex .poke-name { color: var(–text2); text-decoration: line-through; }
+.poke-option.in-dex { opacity: 0.4; }
+.poke-option.in-dex .poke-name { text-decoration: line-through; }
 .poke-option.in-dex .poke-add-icon { display: none; }
-.evo-tag {
-font-size: 0.6rem;
-background: var(–accent);
-color: #fff;
-padding: 1px 5px;
-border-radius: 3px;
-font-weight: 600;
-letter-spacing: 0.5px;
-text-transform: uppercase;
-}
 
-/* ── RIGHT PANEL: Dex Grid ── */
+/* ── RIGHT PANEL ── */
 .panel-right {
 flex: 1;
 display: flex;
 flex-direction: column;
 overflow: hidden;
+min-width: 0;
 }
 
 /* Type Bar */
 .type-bar {
 display: flex;
 flex-wrap: wrap;
-gap: 6px;
-padding: 12px 20px;
+gap: 5px;
+padding: 10px 16px;
 background: var(–bg2);
-border-bottom: 1px solid var(–border);
+border-bottom: 1px solid var(–border-subtle);
 flex-shrink: 0;
 }
 .type-chip {
 display: flex;
 align-items: center;
-gap: 5px;
-padding: 4px 10px;
+gap: 4px;
+padding: 3px 8px;
 border-radius: 20px;
-font-size: 0.7rem;
+font-size: 0.62rem;
 font-weight: 600;
 text-transform: uppercase;
 letter-spacing: 0.5px;
 font-family: var(–font-display);
-background: var(–surface);
-border: 1px solid var(–border);
-color: var(–text2);
+background: var(–bg3);
+border: 1px solid var(–border-subtle);
+color: var(–text3);
 transition: all 0.2s;
 }
 .type-chip .type-count {
 background: var(–bg);
-padding: 1px 6px;
+padding: 1px 5px;
 border-radius: 10px;
-font-size: 0.65rem;
+font-size: 0.58rem;
+min-width: 18px;
+text-align: center;
 }
 .type-chip.active {
 border-color: currentColor;
 color: var(–text);
+background: var(–surface);
 }
 
 /* Status bar */
@@ -278,7 +361,7 @@ color: var(–text);
 display: flex;
 align-items: center;
 gap: 12px;
-padding: 8px 20px;
+padding: 8px 16px;
 background: var(–bg2);
 border-bottom: 1px solid var(–border);
 flex-shrink: 0;
@@ -287,21 +370,21 @@ font-size: 0.8rem;
 .slot-counter {
 font-family: var(–font-display);
 font-weight: 700;
-font-size: 1rem;
+font-size: 0.95rem;
 }
 .slot-counter .filled { color: var(–accent); }
-.slot-counter .total { color: var(–text2); }
+.slot-counter .total { color: var(–text3); }
 .progress-track {
 flex: 1;
-height: 4px;
+height: 3px;
 background: var(–bg);
 border-radius: 2px;
 overflow: hidden;
-max-width: 300px;
+max-width: 260px;
 }
 .progress-fill {
 height: 100%;
-background: linear-gradient(90deg, var(–accent), #ff9472);
+background: linear-gradient(90deg, var(–accent), #ff7a5c);
 border-radius: 2px;
 transition: width 0.3s ease;
 }
@@ -310,127 +393,172 @@ transition: width 0.3s ease;
 .dex-grid-wrap {
 flex: 1;
 overflow-y: auto;
-padding: 20px;
+padding: 16px;
 }
-.dex-grid-wrap::-webkit-scrollbar { width: 6px; }
+.dex-grid-wrap::-webkit-scrollbar { width: 5px; }
 .dex-grid-wrap::-webkit-scrollbar-track { background: transparent; }
 .dex-grid-wrap::-webkit-scrollbar-thumb { background: var(–border); border-radius: 3px; }
 
 .dex-grid {
 display: grid;
-grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-gap: 8px;
+grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+gap: 6px;
 max-width: 1200px;
 }
 .dex-slot {
 aspect-ratio: 1;
-border: 1px dashed var(–border);
-border-radius: var(–radius);
+border: 1px dashed var(–border-subtle);
+border-radius: var(–radius-sm);
 display: flex;
 align-items: center;
 justify-content: center;
 position: relative;
 background: var(–bg2);
-transition: all 0.15s;
+transition: border-color 0.15s, box-shadow 0.2s, background 0.15s, transform 0.15s;
 }
 .dex-slot.empty .slot-num {
 font-family: var(–font-display);
-font-size: 0.75rem;
+font-size: 0.65rem;
 color: var(–border);
 }
 .dex-slot.filled {
 border-style: solid;
 border-color: var(–border);
 cursor: grab;
-background: var(–bg3);
+background: linear-gradient(145deg, var(–bg3), var(–surface));
 }
 .dex-slot.filled:hover {
 border-color: var(–accent);
-box-shadow: 0 0 12px var(–accent-glow);
+box-shadow: 0 0 16px var(–accent-glow), inset 0 0 20px var(–accent-glow2);
+transform: translateY(-2px);
 z-index: 2;
 }
 .dex-slot.filled img {
-width: 70%;
-height: 70%;
+width: 68%;
+height: 68%;
 object-fit: contain;
 image-rendering: pixelated;
 pointer-events: none;
+filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
 }
 .dex-slot .slot-label {
 position: absolute;
-bottom: 2px;
-left: 0;
-right: 0;
+bottom: 2px; left: 0; right: 0;
 text-align: center;
-font-size: 0.55rem;
+font-size: 0.52rem;
 font-weight: 600;
 text-transform: capitalize;
-color: var(–text2);
+color: var(–text3);
 overflow: hidden;
 white-space: nowrap;
 text-overflow: ellipsis;
-padding: 0 2px;
+padding: 0 3px;
 }
 .dex-slot .slot-id {
 position: absolute;
-top: 2px;
-left: 4px;
+top: 2px; left: 4px;
 font-family: var(–font-display);
-font-size: 0.55rem;
-color: var(–text2);
-opacity: 0.6;
+font-size: 0.5rem;
+color: var(–text3);
+opacity: 0.5;
 }
 .dex-slot .remove-btn {
 position: absolute;
-top: -6px;
-right: -6px;
-width: 18px; height: 18px;
+top: -5px; right: -5px;
+width: 20px; height: 20px;
 background: var(–accent);
 color: #fff;
 border: 2px solid var(–bg);
 border-radius: 50%;
-font-size: 0.6rem;
+font-size: 0.65rem;
 display: flex;
 align-items: center;
 justify-content: center;
 cursor: pointer;
 opacity: 0;
-transition: opacity 0.12s;
+transition: opacity 0.12s, transform 0.1s;
 z-index: 3;
 line-height: 1;
 }
+.dex-slot .remove-btn:hover { transform: scale(1.15); }
 .dex-slot.filled:hover .remove-btn { opacity: 1; }
 
 /* Drag states */
 .dex-slot.drag-over {
 border-color: var(–success) !important;
-background: rgba(52,211,153,0.08);
+background: var(–success-glow) !important;
+box-shadow: 0 0 12px var(–success-glow), inset 0 0 16px var(–success-glow);
+transform: scale(1.04);
 }
-.dex-slot.dragging { opacity: 0.4; }
+.dex-slot.dragging {
+opacity: 0.25;
+transform: scale(0.92);
+}
+
+/* Touch drag ghost */
+.touch-drag-ghost {
+position: fixed;
+z-index: 9999;
+pointer-events: none;
+border-radius: var(–radius);
+border: 2px solid var(–accent);
+background: var(–surface);
+box-shadow: var(–shadow-lg), 0 0 30px var(–accent-glow);
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.touch-drag-ghost img {
+width: 70%; height: 70%;
+object-fit: contain;
+image-rendering: pixelated;
+filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+}
+
+/* Touch hold indicator */
+.dex-slot.touch-holding {
+animation: holdPulse 0.35s ease forwards;
+}
+@keyframes holdPulse {
+0% { transform: scale(1); }
+50% { transform: scale(0.9); box-shadow: 0 0 24px var(–accent-glow); }
+100% { transform: scale(0.93); box-shadow: 0 0 16px var(–accent-glow); }
+}
 
 /* Empty state */
-.empty-state {
+.dex-empty-msg {
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-height: 100%;
-color: var(–text2);
+padding: 60px 30px;
 text-align: center;
-padding: 40px;
+color: var(–text3);
 }
-.empty-state svg {
-width: 64px; height: 64px;
+.dex-empty-msg .empty-pokeball {
+width: 48px; height: 48px;
+border: 3px solid var(–border);
+border-radius: 50%;
 margin-bottom: 16px;
+position: relative;
 opacity: 0.3;
 }
-.empty-state h3 {
-font-family: var(–font-display);
-font-size: 1.1rem;
-margin-bottom: 8px;
-color: var(–text);
+.dex-empty-msg .empty-pokeball::after {
+content: ‘’;
+position: absolute;
+left: 0; right: 0;
+top: 50%; height: 3px;
+background: var(–border);
+transform: translateY(-50%);
 }
-.empty-state p { font-size: 0.85rem; }
+.dex-empty-msg h3 {
+font-family: var(–font-display);
+font-size: 0.95rem;
+margin-bottom: 6px;
+color: var(–text2);
+letter-spacing: 1px;
+}
+.dex-empty-msg p { font-size: 0.8rem; }
 
 /* Loading */
 .loading-overlay {
@@ -442,88 +570,107 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 z-index: 1000;
-transition: opacity 0.4s;
+transition: opacity 0.5s;
 }
 .loading-overlay.hidden { opacity: 0; pointer-events: none; }
 .pokeball-spinner {
-width: 60px; height: 60px;
-border: 4px solid var(–border);
+width: 48px; height: 48px;
+border: 3px solid var(–border);
 border-top-color: var(–accent);
 border-radius: 50%;
-animation: spin 0.8s linear infinite;
+animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text {
-margin-top: 16px;
+margin-top: 14px;
 font-family: var(–font-display);
-color: var(–text2);
-font-size: 0.9rem;
-letter-spacing: 1px;
+color: var(–text3);
+font-size: 0.8rem;
+letter-spacing: 1.5px;
+text-transform: uppercase;
 }
 
 /* Toast */
 .toast {
 position: fixed;
-bottom: 24px;
+bottom: 20px;
 left: 50%;
 transform: translateX(-50%) translateY(80px);
 background: var(–surface);
 color: var(–text);
-padding: 12px 24px;
+padding: 10px 22px;
 border-radius: var(–radius);
 border: 1px solid var(–border);
-font-size: 0.85rem;
+font-size: 0.82rem;
 z-index: 500;
-transition: transform 0.3s ease;
+transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
 pointer-events: none;
+box-shadow: var(–shadow);
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
-.panel-left { width: 260px; min-width: 220px; }
-.dex-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+.panel-left { width: 260px; min-width: 210px; }
+.dex-grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); }
 }
 @media (max-width: 600px) {
 header { padding: 8px 12px; gap: 8px; flex-wrap: wrap; }
-header h1 { font-size: 1.1rem; }
+header h1 { font-size: 1rem; }
+.logo-icon { width: 22px; height: 22px; }
+.logo-icon::after { inset: 5px; }
 .header-controls { gap: 6px; }
-.btn { padding: 6px 10px; font-size: 0.7rem; }
+.btn { padding: 6px 10px; font-size: 0.65rem; min-height: 30px; }
 .main-wrap { flex-direction: column; }
 .panel-left {
 width: 100%;
-max-height: 45vh;
 border-right: none;
 border-bottom: 1px solid var(–border);
+max-height: none;
 }
-.dex-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 6px; }
-.type-bar { padding: 8px 12px; gap: 4px; }
-.type-chip { font-size: 0.6rem; padding: 3px 7px; }
-.dex-grid-wrap { padding: 12px; }
+.panel-left .collapsible-body:not(.collapsed) {
+max-height: 38vh !important;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+}
+.panel-left .collapsible-body .pokemon-list { flex: 1; overflow-y: auto; }
+.panel-right {
+flex: 1;
+min-height: 0;
+}
+.panel-right .collapsible-body:not(.collapsed) {
+display: flex;
+flex-direction: column;
+overflow: hidden;
+flex: 1;
+}
+.dex-grid { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 5px; }
+.type-bar { padding: 8px 10px; gap: 4px; }
+.type-chip { font-size: 0.55rem; padding: 2px 6px; }
+.dex-grid-wrap { padding: 10px; }
+.status-bar { padding: 6px 10px; gap: 8px; }
 }
 @media (max-width: 380px) {
-.dex-grid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); }
-header h1 { font-size: 0.95rem; }
+.dex-grid { grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); }
+header h1 { font-size: 0.9rem; letter-spacing: 1.5px; }
 }
-
-/* Landscape mobile */
 @media (max-height: 500px) and (orientation: landscape) {
 .main-wrap { flex-direction: row; }
 .panel-left {
-width: 240px;
+width: 230px;
 max-height: none;
 border-right: 1px solid var(–border);
 border-bottom: none;
 }
-header { padding: 6px 16px; }
-header h1 { font-size: 1rem; }
-.type-bar { padding: 6px 12px; }
-.status-bar { padding: 4px 12px; }
+.panel-left .collapsible-body:not(.collapsed) { max-height: none !important; }
+header { padding: 5px 14px; }
+header h1 { font-size: 0.9rem; }
+.type-bar { padding: 5px 10px; }
+.status-bar { padding: 4px 10px; }
 }
-
-/* Touch: always show remove buttons */
 @media (hover: none) {
-.dex-slot.filled .remove-btn { opacity: 1; }
+.dex-slot.filled .remove-btn { opacity: 0.8; }
 }
 </style>
 
@@ -536,40 +683,52 @@ header h1 { font-size: 1rem; }
 </div>
 
 <header>
-  <h1>Pokédex Forge</h1>
+  <div class="logo-area">
+    <div class="logo-icon"></div>
+    <h1>Pokédex Forge</h1>
+  </div>
   <div class="header-controls">
-    <label>
-      Dex Size
-      <input type="number" id="dexSizeInput" value="151" min="1" max="1025">
-    </label>
-    <button class="btn btn-primary" id="exportBtn" title="Copy dex list to clipboard">Export</button>
+    <label>Dex Size <input type="number" id="dexSizeInput" value="151" min="1" max="1025"></label>
+    <button class="btn btn-primary" id="exportBtn">Export</button>
     <button class="btn btn-danger" id="clearBtn">Clear</button>
   </div>
 </header>
 
 <div class="main-wrap">
-  <!-- LEFT: Pokemon Selector -->
   <div class="panel-left">
-    <div class="search-area">
-      <input type="text" id="searchInput" placeholder="Search Pokémon by name or #…">
+    <div class="panel-toggle" id="addPanelToggle" role="button" tabindex="0">
+      <h2>Add Pokémon <span class="panel-badge" id="addPanelBadge">0</span></h2>
+      <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </div>
-    <div class="pokemon-list" id="pokemonList"></div>
+    <div class="collapsible-body" id="addPanelBody">
+      <div class="search-area">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search by name or #…">
+        </div>
+      </div>
+      <div class="pokemon-list" id="pokemonList"></div>
+    </div>
   </div>
 
-  <!-- RIGHT: Dex Grid & Types -->
-
   <div class="panel-right">
-    <div class="type-bar" id="typeBar"></div>
-    <div class="status-bar">
-      <span class="slot-counter">
-        <span class="filled" id="filledCount">0</span>
-        <span class="total">/ <span id="totalSlots">151</span></span>
-      </span>
-      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-      <button class="btn btn-secondary" id="sortByIdBtn" style="font-size:0.7rem;padding:4px 10px">Sort by #</button>
+    <div class="panel-toggle" id="dexPanelToggle" role="button" tabindex="0">
+      <h2>Your Pokédex <span class="panel-badge" id="dexPanelBadge">0 / 151</span></h2>
+      <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </div>
-    <div class="dex-grid-wrap" id="dexGridWrap">
-      <div class="dex-grid" id="dexGrid"></div>
+    <div class="collapsible-body" id="dexPanelBody" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="type-bar" id="typeBar"></div>
+      <div class="status-bar">
+        <span class="slot-counter">
+          <span class="filled" id="filledCount">0</span>
+          <span class="total">/ <span id="totalSlots">151</span></span>
+        </span>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <button class="btn btn-secondary" id="sortByIdBtn" style="font-size:0.65rem;padding:4px 8px">Sort #</button>
+      </div>
+      <div class="dex-grid-wrap" id="dexGridWrap">
+        <div class="dex-grid" id="dexGrid"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -578,90 +737,100 @@ header h1 { font-size: 1rem; }
 
 <script>
 (() => {
-  // ── STATE ──
   const ALL_TYPES = [
     'normal','fire','water','electric','grass','ice',
     'fighting','poison','ground','flying','psychic','bug',
     'rock','ghost','dragon','dark','steel','fairy'
   ];
 
-  let allPokemon = [];       // [{id, name, types, evoChainId}]
-  let evoChains = {};         // chainId -> [ids...]
-  let speciesChainMap = {};   // pokemonId -> chainId
-  let dexSlots = [];          // ordered array of pokemon ids in dex
+  let allPokemon = [];
+  let evoChains = {};
+  let speciesChainMap = {};
+  let dexSlots = [];
   let dexSize = 151;
-  let spriteCache = {};       // id -> spriteUrl (only fetched when added)
+  let spriteCache = {};
 
-  const SPRITE_URL = id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+  const SPRITE_URL = id =>
+    'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + id + '.png';
 
-  // ── DOM REFS ──
-  const $loading = document.getElementById('loadingOverlay');
-  const $searchInput = document.getElementById('searchInput');
-  const $pokemonList = document.getElementById('pokemonList');
-  const $dexGrid = document.getElementById('dexGrid');
-  const $dexGridWrap = document.getElementById('dexGridWrap');
-  const $typeBar = document.getElementById('typeBar');
-  const $filledCount = document.getElementById('filledCount');
-  const $totalSlots = document.getElementById('totalSlots');
-  const $progressFill = document.getElementById('progressFill');
-  const $dexSizeInput = document.getElementById('dexSizeInput');
-  const $exportBtn = document.getElementById('exportBtn');
-  const $clearBtn = document.getElementById('clearBtn');
-  const $sortByIdBtn = document.getElementById('sortByIdBtn');
-  const $toast = document.getElementById('toast');
+  const el = id => document.getElementById(id);
+  const $loading = el('loadingOverlay');
+  const $searchInput = el('searchInput');
+  const $pokemonList = el('pokemonList');
+  const $dexGrid = el('dexGrid');
+  const $dexGridWrap = el('dexGridWrap');
+  const $typeBar = el('typeBar');
+  const $filledCount = el('filledCount');
+  const $totalSlots = el('totalSlots');
+  const $progressFill = el('progressFill');
+  const $dexSizeInput = el('dexSizeInput');
+  const $exportBtn = el('exportBtn');
+  const $clearBtn = el('clearBtn');
+  const $sortByIdBtn = el('sortByIdBtn');
+  const $toast = el('toast');
+  const $addToggle = el('addPanelToggle');
+  const $addBody = el('addPanelBody');
+  const $addBadge = el('addPanelBadge');
+  const $dexToggle = el('dexPanelToggle');
+  const $dexBody = el('dexPanelBody');
+  const $dexBadge = el('dexPanelBadge');
+
+  // ── COLLAPSIBLE PANELS ──
+  function initCollapsible(toggle, body) {
+    let open = true;
+    toggle.addEventListener('click', () => {
+      open = !open;
+      toggle.classList.toggle('collapsed-state', !open);
+      if (!open) {
+        body.style.maxHeight = body.scrollHeight + 'px';
+        body.offsetHeight; // force reflow
+        body.classList.add('collapsed');
+      } else {
+        body.classList.remove('collapsed');
+        body.style.maxHeight = body.scrollHeight + 'px';
+        const done = () => { body.style.maxHeight = ''; body.removeEventListener('transitionend', done); };
+        body.addEventListener('transitionend', done);
+      }
+    });
+    toggle.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); }
+    });
+  }
+  initCollapsible($addToggle, $addBody);
+  initCollapsible($dexToggle, $dexBody);
 
   // ── INIT ──
   async function init() {
     try {
-      // Fetch full pokemon list with types from PokeAPI
-      // We fetch all pokemon in one call (names + urls), then fetch types in batches
       const listResp = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025');
       const listData = await listResp.json();
 
-      // Now fetch type info for each. Use the pokemon endpoint with type data.
-      // To avoid 1025 individual calls, we use the type endpoints instead.
-      // Each type endpoint lists all pokemon of that type.
       const typePromises = ALL_TYPES.map(t =>
-        fetch(`https://pokeapi.co/api/v2/type/${t}`).then(r => r.json())
+        fetch('https://pokeapi.co/api/v2/type/' + t).then(r => r.json())
       );
       const typeResults = await Promise.all(typePromises);
 
-      // Build type map: pokemonId -> [types]
       const typeMap = {};
-      typeResults.forEach((typeData, i) => {
-        const typeName = ALL_TYPES[i];
-        typeData.pokemon.forEach(entry => {
-          const url = entry.pokemon.url;
-          const id = parseInt(url.split('/').filter(Boolean).pop());
+      typeResults.forEach((td, i) => {
+        const tn = ALL_TYPES[i];
+        td.pokemon.forEach(entry => {
+          const id = parseInt(entry.pokemon.url.split('/').filter(Boolean).pop());
           if (!typeMap[id]) typeMap[id] = [];
-          typeMap[id].push(typeName);
+          typeMap[id].push(tn);
         });
       });
 
-      // Build allPokemon from list
-      allPokemon = listData.results.map((p, idx) => {
-        const id = idx + 1;
-        return {
-          id,
-          name: p.name,
-          types: typeMap[id] || ['normal']
-        };
-      }).filter(p => p.id <= 1025);
+      allPokemon = listData.results.map((p, idx) => ({
+        id: idx + 1,
+        name: p.name,
+        types: typeMap[idx + 1] || ['normal']
+      })).filter(p => p.id <= 1025);
 
-      // Fetch evolution chains (species endpoint has chain refs)
-      // We batch-fetch species to get evolution_chain urls
-      // To keep load time reasonable, fetch first 1025 species in one call
       const speciesResp = await fetch('https://pokeapi.co/api/v2/pokemon-species?limit=1025');
       const speciesData = await speciesResp.json();
-
-      // Fetch each species detail to get evo chain URL
-      // This is many calls... let's do it in batches of 50
-      const chainUrls = new Map(); // chainUrl -> chainId
       const speciesDetails = [];
-
-      // Actually, let's fetch species individually but cache chain URLs
-      // Use a smarter approach: fetch species in batches
       const BATCH = 80;
+
       for (let i = 0; i < speciesData.results.length; i += BATCH) {
         const batch = speciesData.results.slice(i, i + BATCH);
         const details = await Promise.all(
@@ -670,38 +839,31 @@ header h1 { font-size: 1rem; }
         details.forEach(d => { if (d) speciesDetails.push(d); });
       }
 
-      // Gather unique chain URLs
       const uniqueChainUrls = new Set();
       speciesDetails.forEach(s => {
         if (s.evolution_chain?.url) {
           uniqueChainUrls.add(s.evolution_chain.url);
-          const chainId = s.evolution_chain.url.split('/').filter(Boolean).pop();
-          speciesChainMap[s.id] = chainId;
+          speciesChainMap[s.id] = s.evolution_chain.url.split('/').filter(Boolean).pop();
         }
       });
 
-      // Fetch all evolution chains
-      const chainUrlArray = [...uniqueChainUrls];
-      for (let i = 0; i < chainUrlArray.length; i += BATCH) {
-        const batch = chainUrlArray.slice(i, i + BATCH);
+      const chainArr = [...uniqueChainUrls];
+      for (let i = 0; i < chainArr.length; i += BATCH) {
+        const batch = chainArr.slice(i, i + BATCH);
         const chains = await Promise.all(
-          batch.map(url => fetch(url).then(r => r.json()).catch(() => null))
+          batch.map(u => fetch(u).then(r => r.json()).catch(() => null))
         );
         chains.forEach(c => {
           if (!c) return;
-          const chainId = c.id;
           const ids = [];
-          function walk(node) {
-            const sid = parseInt(node.species.url.split('/').filter(Boolean).pop());
-            ids.push(sid);
-            node.evolves_to.forEach(walk);
-          }
-          walk(c.chain);
-          evoChains[chainId] = ids;
+          (function walk(n) {
+            ids.push(parseInt(n.species.url.split('/').filter(Boolean).pop()));
+            n.evolves_to.forEach(walk);
+          })(c.chain);
+          evoChains[c.id] = ids;
         });
       }
 
-      // Done loading
       $loading.classList.add('hidden');
       setTimeout(() => $loading.style.display = 'none', 500);
 
@@ -711,81 +873,58 @@ header h1 { font-size: 1rem; }
       updateStatus();
     } catch (err) {
       console.error('Init error:', err);
-      $loading.querySelector('.loading-text').textContent =
-        'Failed to load data. Please refresh.';
+      $loading.querySelector('.loading-text').textContent = 'Failed to load. Please refresh.';
     }
   }
 
-  // ── POKEMON LIST (left panel) ──
-  function renderPokemonList(filter = '') {
-    const filt = filter.toLowerCase().trim();
-    const fragment = document.createDocumentFragment();
+  // ── POKEMON LIST ──
+  function renderPokemonList(filter) {
+    const filt = (filter || '').toLowerCase().trim();
+    const frag = document.createDocumentFragment();
 
     const filtered = allPokemon.filter(p => {
       if (!filt) return true;
-      if (p.name.includes(filt)) return true;
-      if (String(p.id) === filt || String(p.id).startsWith(filt)) return true;
-      return false;
+      return p.name.includes(filt) || String(p.id) === filt || String(p.id).startsWith(filt);
     });
 
     filtered.forEach(p => {
       const div = document.createElement('div');
       div.className = 'poke-option' + (dexSlots.includes(p.id) ? ' in-dex' : '');
-      div.dataset.id = p.id;
-
-      const typeDots = p.types.map(t =>
-        `<span class="type-dot" style="background:var(--type-${t})" title="${t}"></span>`
-      ).join('');
-
-      div.innerHTML = `
-        <span class="poke-id">#${String(p.id).padStart(3,'0')}</span>
-        <span class="poke-name">${p.name}</span>
-        <span class="poke-types">${typeDots}</span>
-        <span class="poke-add-icon">+</span>
-      `;
+      div.innerHTML =
+        '<span class="poke-id">#' + String(p.id).padStart(3, '0') + '</span>' +
+        '<span class="poke-name">' + p.name + '</span>' +
+        '<span class="poke-types">' + p.types.map(t =>
+          '<span class="type-dot" style="background:var(--type-' + t + ')" title="' + t + '"></span>'
+        ).join('') + '</span>' +
+        '<span class="poke-add-icon">+</span>';
       div.addEventListener('click', () => addPokemonWithEvos(p.id));
-      fragment.appendChild(div);
+      frag.appendChild(div);
     });
 
     $pokemonList.innerHTML = '';
-    $pokemonList.appendChild(fragment);
+    $pokemonList.appendChild(frag);
+    $addBadge.textContent = (allPokemon.length - dexSlots.length) + ' left';
   }
 
-  // ── ADD POKEMON + EVOLUTIONS ──
+  // ── ADD + EVOLUTIONS ──
   function addPokemonWithEvos(id) {
-    const chainId = speciesChainMap[id];
+    const cid = speciesChainMap[id];
     let toAdd = [id];
+    if (cid && evoChains[cid]) toAdd = evoChains[cid].filter(e => e <= 1025);
+    toAdd = toAdd.filter(e => !dexSlots.includes(e));
 
-    if (chainId && evoChains[chainId]) {
-      toAdd = evoChains[chainId].filter(eid => eid <= 1025);
-    }
+    const left = dexSize - dexSlots.length;
+    if (left <= 0) { showToast('Dex is full!'); return; }
+    if (!toAdd.length) { showToast('Already in your Dex'); return; }
 
-    // Filter out already added
-    toAdd = toAdd.filter(eid => !dexSlots.includes(eid));
-
-    // Check capacity
-    const slotsLeft = dexSize - dexSlots.length;
-    if (slotsLeft <= 0) {
-      showToast('Dex is full!');
-      return;
-    }
-    if (toAdd.length === 0) {
-      showToast('Already in your Dex');
-      return;
-    }
-
-    toAdd = toAdd.slice(0, slotsLeft);
+    toAdd = toAdd.slice(0, left);
     dexSlots.push(...toAdd);
-
-    // Pre-load sprites for added mons only
-    toAdd.forEach(eid => { spriteCache[eid] = SPRITE_URL(eid); });
+    toAdd.forEach(e => { spriteCache[e] = SPRITE_URL(e); });
 
     const mon = allPokemon.find(p => p.id === id);
-    if (toAdd.length > 1) {
-      showToast(`Added ${toAdd.length} Pokémon (${mon?.name} line)`);
-    } else {
-      showToast(`Added ${mon?.name}`);
-    }
+    showToast(toAdd.length > 1
+      ? 'Added ' + toAdd.length + ' (' + (mon?.name || '') + ' line)'
+      : 'Added ' + (mon?.name || ''));
 
     renderDexGrid();
     renderPokemonList($searchInput.value);
@@ -805,9 +944,18 @@ header h1 { font-size: 1rem; }
   // ── DEX GRID ──
   function renderDexGrid() {
     $dexGrid.innerHTML = '';
-    const total = dexSize;
+    $dexBadge.textContent = dexSlots.length + ' / ' + dexSize;
 
-    for (let i = 0; i < total; i++) {
+    if (!dexSlots.length) {
+      $dexGrid.innerHTML =
+        '<div class="dex-empty-msg" style="grid-column:1/-1">' +
+        '<div class="empty-pokeball"></div>' +
+        '<h3>No Pokémon yet</h3>' +
+        '<p>Select from the list to start building your dex</p></div>';
+      return;
+    }
+
+    for (let i = 0; i < dexSize; i++) {
       const slot = document.createElement('div');
       slot.className = 'dex-slot';
       slot.dataset.index = i;
@@ -818,255 +966,235 @@ header h1 { font-size: 1rem; }
         slot.classList.add('filled');
         slot.draggable = true;
         slot.dataset.pokeid = pid;
+        slot.innerHTML =
+          '<span class="slot-id">#' + String(pid).padStart(3, '0') + '</span>' +
+          '<img src="' + (spriteCache[pid] || SPRITE_URL(pid)) + '" alt="' + (mon?.name || '') + '" loading="lazy">' +
+          '<span class="slot-label">' + (mon?.name || '') + '</span>' +
+          '<span class="remove-btn" title="Remove">\u00d7</span>';
 
-        slot.innerHTML = `
-          <span class="slot-id">#${String(pid).padStart(3,'0')}</span>
-          <img src="${spriteCache[pid] || SPRITE_URL(pid)}" alt="${mon?.name}" loading="lazy">
-          <span class="slot-label">${mon?.name || ''}</span>
-          <span class="remove-btn" title="Remove">×</span>
-        `;
-
-        // Remove button
         slot.querySelector('.remove-btn').addEventListener('click', e => {
           e.stopPropagation();
           removePokemon(pid);
         });
-
-        // Drag events
         slot.addEventListener('dragstart', onDragStart);
         slot.addEventListener('dragend', onDragEnd);
       } else {
         slot.classList.add('empty');
-        slot.innerHTML = `<span class="slot-num">${i + 1}</span>`;
+        slot.innerHTML = '<span class="slot-num">' + (i + 1) + '</span>';
       }
 
-      // Drop target
       slot.addEventListener('dragover', onDragOver);
       slot.addEventListener('dragenter', onDragEnter);
       slot.addEventListener('dragleave', onDragLeave);
       slot.addEventListener('drop', onDrop);
-
       $dexGrid.appendChild(slot);
     }
   }
 
-  // ── DRAG & DROP ──
-  let dragSrcIndex = null;
-
+  // ── DESKTOP DRAG ──
+  let dragSrc = null;
   function onDragStart(e) {
-    dragSrcIndex = parseInt(this.dataset.index);
+    dragSrc = parseInt(this.dataset.index);
     this.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', dragSrcIndex);
+    e.dataTransfer.setData('text/plain', dragSrc);
   }
   function onDragEnd() {
     this.classList.remove('dragging');
-    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    document.querySelectorAll('.drag-over').forEach(e => e.classList.remove('drag-over'));
   }
-  function onDragOver(e) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  }
-  function onDragEnter(e) {
-    e.preventDefault();
-    this.classList.add('drag-over');
-  }
-  function onDragLeave() {
-    this.classList.remove('drag-over');
-  }
+  function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+  function onDragEnter(e) { e.preventDefault(); this.classList.add('drag-over'); }
+  function onDragLeave() { this.classList.remove('drag-over'); }
   function onDrop(e) {
     e.preventDefault();
     this.classList.remove('drag-over');
-    const targetIndex = parseInt(this.dataset.index);
-    if (dragSrcIndex === null || dragSrcIndex === targetIndex) return;
-    if (dragSrcIndex >= dexSlots.length) return;
-
-    // Reorder: remove from src, insert at target
-    const [moved] = dexSlots.splice(dragSrcIndex, 1);
-    const insertAt = Math.min(targetIndex, dexSlots.length);
-    dexSlots.splice(insertAt, 0, moved);
-
+    const ti = parseInt(this.dataset.index);
+    if (dragSrc === null || dragSrc === ti || dragSrc >= dexSlots.length) return;
+    const [m] = dexSlots.splice(dragSrc, 1);
+    dexSlots.splice(Math.min(ti, dexSlots.length), 0, m);
     renderDexGrid();
-    dragSrcIndex = null;
+    dragSrc = null;
   }
 
-  // ── Touch drag support ──
-  let touchDragIndex = null;
-  let touchClone = null;
-  let touchStartY = 0;
-  let touchStartX = 0;
-  let touchMoved = false;
+  // ── MOBILE TOUCH DRAG (long-press) ──
+  let ts = { idx: null, ghost: null, timer: null, on: false, sx: 0, sy: 0, last: null, si: null };
+  const HOLD_MS = 280;
+
+  function cleanTouch() {
+    clearTimeout(ts.timer);
+    clearInterval(ts.si);
+    if (ts.ghost && ts.ghost.parentNode) ts.ghost.parentNode.removeChild(ts.ghost);
+    document.querySelectorAll('.dragging,.touch-holding,.drag-over').forEach(e =>
+      e.classList.remove('dragging', 'touch-holding', 'drag-over'));
+    ts = { idx: null, ghost: null, timer: null, on: false, sx: 0, sy: 0, last: null, si: null };
+  }
 
   $dexGrid.addEventListener('touchstart', e => {
     const slot = e.target.closest('.dex-slot.filled');
     if (!slot || e.target.closest('.remove-btn')) return;
-    touchDragIndex = parseInt(slot.dataset.index);
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    touchMoved = false;
+    const t = e.touches[0];
+    ts.idx = parseInt(slot.dataset.index);
+    ts.sx = t.clientX;
+    ts.sy = t.clientY;
+    ts.on = false;
+
+    ts.timer = setTimeout(() => {
+      ts.on = true;
+      slot.classList.add('touch-holding');
+
+      const r = slot.getBoundingClientRect();
+      const g = document.createElement('div');
+      g.className = 'touch-drag-ghost';
+      g.style.width = r.width + 'px';
+      g.style.height = r.height + 'px';
+      g.style.left = (t.clientX - r.width / 2) + 'px';
+      g.style.top = (t.clientY - r.height / 2) + 'px';
+      const img = slot.querySelector('img');
+      if (img) { const c = document.createElement('img'); c.src = img.src; g.appendChild(c); }
+      document.body.appendChild(g);
+      ts.ghost = g;
+
+      setTimeout(() => { slot.classList.remove('touch-holding'); slot.classList.add('dragging'); }, 50);
+    }, HOLD_MS);
   }, { passive: true });
 
   $dexGrid.addEventListener('touchmove', e => {
-    if (touchDragIndex === null) return;
-    const dx = e.touches[0].clientX - touchStartX;
-    const dy = e.touches[0].clientY - touchStartY;
-    if (!touchMoved && Math.abs(dx) + Math.abs(dy) > 15) {
-      touchMoved = true;
+    if (ts.idx === null) return;
+    const t = e.touches[0];
+    if (!ts.on) {
+      if (Math.abs(t.clientX - ts.sx) > 10 || Math.abs(t.clientY - ts.sy) > 10) {
+        clearTimeout(ts.timer);
+        ts.timer = null;
+      }
+      return;
     }
-    if (!touchMoved) return;
     e.preventDefault();
 
-    if (!touchClone) {
-      const src = $dexGrid.children[touchDragIndex];
-      touchClone = src.cloneNode(true);
-      touchClone.style.position = 'fixed';
-      touchClone.style.zIndex = 999;
-      touchClone.style.opacity = 0.8;
-      touchClone.style.pointerEvents = 'none';
-      touchClone.style.width = src.offsetWidth + 'px';
-      touchClone.style.height = src.offsetHeight + 'px';
-      document.body.appendChild(touchClone);
-      src.classList.add('dragging');
+    if (ts.ghost) {
+      const w = ts.ghost.offsetWidth, h = ts.ghost.offsetHeight;
+      ts.ghost.style.left = (t.clientX - w / 2) + 'px';
+      ts.ghost.style.top = (t.clientY - h / 2) + 'px';
     }
-    touchClone.style.left = (e.touches[0].clientX - 40) + 'px';
-    touchClone.style.top = (e.touches[0].clientY - 40) + 'px';
 
-    // Highlight target
-    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-    const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
-    const targetSlot = target?.closest?.('.dex-slot');
-    if (targetSlot) targetSlot.classList.add('drag-over');
+    // Auto-scroll
+    const wr = $dexGridWrap.getBoundingClientRect();
+    clearInterval(ts.si); ts.si = null;
+    if (t.clientY < wr.top + 50 && t.clientY > wr.top)
+      ts.si = setInterval(() => { $dexGridWrap.scrollTop -= 6; }, 16);
+    else if (t.clientY > wr.bottom - 50 && t.clientY < wr.bottom)
+      ts.si = setInterval(() => { $dexGridWrap.scrollTop += 6; }, 16);
+
+    // Highlight
+    if (ts.last) ts.last.classList.remove('drag-over');
+    if (ts.ghost) ts.ghost.style.display = 'none';
+    const under = document.elementFromPoint(t.clientX, t.clientY);
+    if (ts.ghost) ts.ghost.style.display = '';
+    const tgt = under?.closest?.('.dex-slot');
+    if (tgt && tgt !== $dexGrid.children[ts.idx]) {
+      tgt.classList.add('drag-over');
+      ts.last = tgt;
+    } else { ts.last = null; }
   }, { passive: false });
 
-  $dexGrid.addEventListener('touchend', e => {
-    if (touchDragIndex === null) return;
-    if (touchClone) {
-      document.body.removeChild(touchClone);
-      touchClone = null;
-    }
-    document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
-    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-
-    if (touchMoved) {
-      const touch = e.changedTouches[0];
-      const target = document.elementFromPoint(touch.clientX, touch.clientY);
-      const targetSlot = target?.closest?.('.dex-slot');
-      if (targetSlot) {
-        const targetIndex = parseInt(targetSlot.dataset.index);
-        if (touchDragIndex !== targetIndex && touchDragIndex < dexSlots.length) {
-          const [moved] = dexSlots.splice(touchDragIndex, 1);
-          const insertAt = Math.min(targetIndex, dexSlots.length);
-          dexSlots.splice(insertAt, 0, moved);
-          renderDexGrid();
-        }
+  $dexGrid.addEventListener('touchend', () => {
+    if (ts.on && ts.last) {
+      const ti = parseInt(ts.last.dataset.index);
+      if (ts.idx !== ti && ts.idx < dexSlots.length) {
+        const [m] = dexSlots.splice(ts.idx, 1);
+        dexSlots.splice(Math.min(ti, dexSlots.length), 0, m);
+        renderDexGrid();
       }
     }
-    touchDragIndex = null;
-    touchMoved = false;
+    cleanTouch();
   });
+  $dexGrid.addEventListener('touchcancel', cleanTouch);
 
   // ── TYPE BAR ──
   function renderTypeBar() {
-    const counts = {};
-    ALL_TYPES.forEach(t => counts[t] = 0);
+    const c = {};
+    ALL_TYPES.forEach(t => c[t] = 0);
     dexSlots.forEach(id => {
-      const mon = allPokemon.find(p => p.id === id);
-      if (mon) mon.types.forEach(t => { if (counts[t] !== undefined) counts[t]++; });
+      const m = allPokemon.find(p => p.id === id);
+      if (m) m.types.forEach(t => { if (c[t] !== undefined) c[t]++; });
     });
-
-    $typeBar.innerHTML = ALL_TYPES.map(t => `
-      <span class="type-chip${counts[t] > 0 ? ' active' : ''}" style="${counts[t] > 0 ? `color:var(--type-${t});border-color:var(--type-${t})` : ''}">
-        <span class="type-dot" style="background:var(--type-${t})"></span>
-        ${t}
-        <span class="type-count">${counts[t]}</span>
-      </span>
-    `).join('');
+    $typeBar.innerHTML = ALL_TYPES.map(t =>
+      '<span class="type-chip' + (c[t] > 0 ? ' active' : '') + '" style="' +
+      (c[t] > 0 ? 'color:var(--type-' + t + ');border-color:var(--type-' + t + ')' : '') + '">' +
+      '<span class="type-dot" style="background:var(--type-' + t + ')"></span>' +
+      t + '<span class="type-count">' + c[t] + '</span></span>'
+    ).join('');
   }
 
   // ── STATUS ──
   function updateStatus() {
-    const filled = dexSlots.length;
-    $filledCount.textContent = filled;
+    $filledCount.textContent = dexSlots.length;
     $totalSlots.textContent = dexSize;
-    $progressFill.style.width = `${Math.min(100, (filled / dexSize) * 100)}%`;
+    $progressFill.style.width = Math.min(100, (dexSlots.length / dexSize) * 100) + '%';
+    $dexBadge.textContent = dexSlots.length + ' / ' + dexSize;
   }
 
   // ── EXPORT ──
   $exportBtn.addEventListener('click', () => {
-    if (dexSlots.length === 0) {
-      showToast('Dex is empty');
-      return;
-    }
+    if (!dexSlots.length) { showToast('Dex is empty'); return; }
     const lines = dexSlots.map((id, i) => {
-      const mon = allPokemon.find(p => p.id === id);
-      return `${String(i + 1).padStart(3, '0')}. ${mon?.name ? mon.name.charAt(0).toUpperCase() + mon.name.slice(1) : '???'} (#${id})`;
+      const m = allPokemon.find(p => p.id === id);
+      const n = m?.name ? m.name[0].toUpperCase() + m.name.slice(1) : '???';
+      return String(i + 1).padStart(3, '0') + '. ' + n + ' (#' + id + ')';
     });
-    const text = `Pokédex (${dexSlots.length}/${dexSize})\n${'─'.repeat(30)}\n${lines.join('\n')}`;
-    navigator.clipboard.writeText(text).then(() => {
-      showToast('Copied to clipboard!');
-    }).catch(() => {
-      showToast('Copy failed – check permissions');
-    });
+    navigator.clipboard.writeText(
+      'Pok\u00e9dex (' + dexSlots.length + '/' + dexSize + ')\n' +
+      '\u2500'.repeat(30) + '\n' + lines.join('\n')
+    ).then(() => showToast('Copied!')).catch(() => showToast('Copy failed'));
   });
 
   // ── CLEAR ──
   $clearBtn.addEventListener('click', () => {
-    if (dexSlots.length === 0) return;
-    if (!confirm('Clear all Pokémon from your Dex?')) return;
-    dexSlots = [];
-    spriteCache = {};
-    renderDexGrid();
-    renderPokemonList($searchInput.value);
-    updateStatus();
-    renderTypeBar();
+    if (!dexSlots.length) return;
+    if (!confirm('Clear your entire Dex?')) return;
+    dexSlots = []; spriteCache = {};
+    renderDexGrid(); renderPokemonList($searchInput.value);
+    updateStatus(); renderTypeBar();
     showToast('Dex cleared');
   });
 
   // ── SORT ──
   $sortByIdBtn.addEventListener('click', () => {
-    if (dexSlots.length === 0) return;
+    if (!dexSlots.length) return;
     dexSlots.sort((a, b) => a - b);
     renderDexGrid();
-    showToast('Sorted by Pokédex number');
+    showToast('Sorted by #');
   });
 
   // ── DEX SIZE ──
   $dexSizeInput.addEventListener('change', () => {
-    let val = parseInt($dexSizeInput.value);
-    if (isNaN(val) || val < 1) val = 1;
-    if (val > 1025) val = 1025;
-    $dexSizeInput.value = val;
-    dexSize = val;
-
-    // Trim slots if necessary
+    let v = parseInt($dexSizeInput.value);
+    if (isNaN(v) || v < 1) v = 1;
+    if (v > 1025) v = 1025;
+    $dexSizeInput.value = v;
+    dexSize = v;
     if (dexSlots.length > dexSize) {
-      const removed = dexSlots.splice(dexSize);
-      removed.forEach(id => delete spriteCache[id]);
+      dexSlots.splice(dexSize).forEach(id => delete spriteCache[id]);
       renderPokemonList($searchInput.value);
     }
-
-    renderDexGrid();
-    updateStatus();
-    renderTypeBar();
+    renderDexGrid(); updateStatus(); renderTypeBar();
   });
 
   // ── SEARCH ──
-  let searchDebounce;
+  let sdb;
   $searchInput.addEventListener('input', () => {
-    clearTimeout(searchDebounce);
-    searchDebounce = setTimeout(() => {
-      renderPokemonList($searchInput.value);
-    }, 150);
+    clearTimeout(sdb);
+    sdb = setTimeout(() => renderPokemonList($searchInput.value), 150);
   });
 
   // ── TOAST ──
   function showToast(msg) {
     $toast.textContent = msg;
     $toast.classList.add('show');
-    setTimeout(() => $toast.classList.remove('show'), 2000);
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => $toast.classList.remove('show'), 2200);
   }
 
-  // GO
   init();
 })();
 </script>
