@@ -315,6 +315,79 @@ body.view-mode .status-toggles{margin-left:0}
   const $dexBadge = el('dexPanelBadge');
   const $toggleTypeBar = el('toggleTypeBar');
   const $toggleTypeBadges = el('toggleTypeBadges');
+  const $shareBtn = el('shareBtn');
+  const $viewBanner = el('viewBanner');
+  const $buildOwnBtn = el('buildOwnBtn');
+
+  // ── VIEW MODE / SHARE ENCODING ──
+  let viewMode = false;
+
+  function encodeDex() {
+    // Pack: 2 bytes dexSize + 2 bytes per slot ID (big-endian uint16)
+    const buf = new Uint8Array(2 + dexSlots.length * 2);
+    buf[0] = (dexSize >> 8) & 0xff;
+    buf[1] = dexSize & 0xff;
+    for (let i = 0; i < dexSlots.length; i++) {
+      buf[2 + i * 2] = (dexSlots[i] >> 8) & 0xff;
+      buf[2 + i * 2 + 1] = dexSlots[i] & 0xff;
+    }
+    // base64url encode
+    let b64 = btoa(String.fromCharCode(...buf));
+    return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  function decodeDex(str) {
+    try {
+      // base64url decode
+      let b64 = str.replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      const raw = atob(b64);
+      const buf = new Uint8Array(raw.length);
+      for (let i = 0; i < raw.length; i++) buf[i] = raw.charCodeAt(i);
+      if (buf.length < 2) return null;
+      const size = (buf[0] << 8) | buf[1];
+      const slots = [];
+      for (let i = 2; i + 1 < buf.length; i += 2) {
+        slots.push((buf[i] << 8) | buf[i + 1]);
+      }
+      return { size, slots };
+    } catch (e) { return null; }
+  }
+
+  function checkViewMode() {
+    const hash = window.location.hash;
+    if (hash.startsWith('#dex=')) {
+      const data = decodeDex(hash.slice(5));
+      if (data && data.slots.length > 0) {
+        viewMode = true;
+        dexSize = data.size;
+        dexSlots = data.slots;
+        data.slots.forEach(id => { spriteCache[id] = SPRITE_URL(id); });
+        $dexSizeInput.value = dexSize;
+        document.body.classList.add('view-mode');
+        $viewBanner.style.display = '';
+        return true;
+      }
+    }
+    return false;
+  }
+
+  $shareBtn.addEventListener('click', () => {
+    if (!dexSlots.length) { showToast('Add Pok\u00e9mon first'); return; }
+    const encoded = encodeDex();
+    const url = window.location.origin + window.location.pathname + '#dex=' + encoded;
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('Share link copied!');
+    }).catch(() => {
+      // Fallback: show in prompt
+      prompt('Copy this share link:', url);
+    });
+  });
+
+  $buildOwnBtn.addEventListener('click', () => {
+    window.location.hash = '';
+    window.location.reload();
+  });
 
   // ── COLLAPSIBLE ──
   function initCollapsible(toggle, body) {
@@ -459,7 +532,10 @@ body.view-mode .status-toggles{margin-left:0}
       $loading.classList.add('hidden');
       setTimeout(() => $loading.style.display = 'none', 500);
 
-      renderPokemonList();
+      // Check if loading a shared dex from URL
+      const isShared = checkViewMode();
+
+      if (!isShared) renderPokemonList();
       renderTypeBar();
       renderDexGrid();
       updateStatus();
@@ -557,7 +633,9 @@ body.view-mode .status-toggles{margin-left:0}
   // ── DEX GRID ──
   function renderDexGrid() {
     $dexGrid.innerHTML = '';
-    $dexBadge.textContent = dexSlots.length + ' / ' + dexSize;
+    $dexBadge.textContent = viewMode
+      ? dexSlots.length + ' Pok\u00e9mon'
+      : dexSlots.length + ' / ' + dexSize;
 
     if (!dexSlots.length) {
       $dexGrid.innerHTML =
@@ -592,23 +670,29 @@ body.view-mode .status-toggles{margin-left:0}
           '<img src="' + (spriteCache[pid] || SPRITE_URL(pid)) + '" alt="' + (mon?.displayName || '') + '" loading="lazy">' +
           '<span class="slot-label">' + (mon?.displayName || '') + '</span>' +
           typeBadgesHtml +
-          '<span class="remove-btn" title="Remove">\u00d7</span>';
+          (viewMode ? '' : '<span class="remove-btn" title="Remove">\u00d7</span>');
 
-        slot.querySelector('.remove-btn').addEventListener('click', e => {
-          e.stopPropagation();
-          removePokemon(pid);
-        });
-        slot.addEventListener('dragstart', onDragStart);
-        slot.addEventListener('dragend', onDragEnd);
+        if (!viewMode) {
+          slot.querySelector('.remove-btn').addEventListener('click', e => {
+            e.stopPropagation();
+            removePokemon(pid);
+          });
+          slot.draggable = true;
+          slot.addEventListener('dragstart', onDragStart);
+          slot.addEventListener('dragend', onDragEnd);
+        }
       } else {
+        if (viewMode) continue; // Don't show empty slots in view mode
         slot.classList.add('empty');
         slot.innerHTML = '<span class="slot-num">' + (i + 1) + '</span>';
       }
 
-      slot.addEventListener('dragover', onDragOver);
-      slot.addEventListener('dragenter', onDragEnter);
-      slot.addEventListener('dragleave', onDragLeave);
-      slot.addEventListener('drop', onDrop);
+      if (!viewMode) {
+        slot.addEventListener('dragover', onDragOver);
+        slot.addEventListener('dragenter', onDragEnter);
+        slot.addEventListener('dragleave', onDragLeave);
+        slot.addEventListener('drop', onDrop);
+      }
       $dexGrid.appendChild(slot);
     }
   }
