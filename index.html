@@ -1,404 +1,526 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" style="color-scheme:dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Pokédex Builder</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-–bg:        #0d0d0f;
-–surface:   #16161a;
-–surface2:  #1e1e24;
-–border:    #2a2a32;
-–border2:   #3a3a46;
-–text:      #e8e8f0;
-–muted:     #6b6b80;
+–bg:        #0c0c0e;
+–surface:   #141417;
+–surface2:  #1c1c22;
+–surface3:  #242430;
+–border:    #28282f;
+–border2:   #38383f;
+–text:      #ebebf5;
+–text2:     #a0a0b8;
+–muted:     #60607a;
 –accent:    #7c6fff;
-–accent2:   #a594ff;
+–accent-bg: rgba(124,111,255,0.12);
 –red:       #ff4f64;
-–green:     #4fff9f;
-–yellow:    #ffd44f;
-–radius:    12px;
-–radius-sm: 8px;
-–type-normal:#9fa0a0; –type-fire:#fd7d24; –type-water:#4592c4;
-–type-electric:#eed535; –type-grass:#9bcc50; –type-ice:#51c4e7;
-–type-fighting:#d56723; –type-poison:#b97fc9; –type-ground:#ab9842;
-–type-flying:#748fc9; –type-psychic:#f366b9; –type-bug:#729f3f;
-–type-rock:#a38c21; –type-ghost:#7b62a3; –type-dragon:#53a4cf;
-–type-dark:#707070; –type-steel:#9eb7b8; –type-fairy:#fdb9e9;
+–r:         10px;
+–r-sm:      7px;
+
+–type-normal:   #8a8a8a;
+–type-fire:     #e8652a;
+–type-water:    #3a82d4;
+–type-electric: #c8a800;
+–type-grass:    #5a9e30;
+–type-ice:      #3aaecc;
+–type-fighting: #b84020;
+–type-poison:   #8840a8;
+–type-ground:   #907830;
+–type-flying:   #5870b8;
+–type-psychic:  #d84090;
+–type-bug:      #607828;
+–type-rock:     #887820;
+–type-ghost:    #5040a0;
+–type-dragon:   #3050d8;
+–type-dark:     #505050;
+–type-steel:    #6878a0;
+–type-fairy:    #c060a8;
 }
 
-html, body { height: 100%; }
+html { height: 100%; }
 body {
 font-family: ‘DM Sans’, sans-serif;
 background: var(–bg);
 color: var(–text);
-min-height: 100vh;
+min-height: 100%;
 font-size: 15px;
 line-height: 1.5;
+-webkit-font-smoothing: antialiased;
+/* Force dark on all native inputs */
+color-scheme: dark;
 }
 
-/* HEADER */
-.header {
-position: sticky; top: 0; z-index: 100;
-background: rgba(13,13,15,0.9);
-backdrop-filter: blur(12px);
-border-bottom: 1px solid var(–border);
-padding: 0 24px;
-height: 56px;
-display: flex; align-items: center; justify-content: space-between;
+/* ── INPUTS forced dark ── */
+input, select, textarea, button {
+color-scheme: dark;
+font-family: ‘DM Sans’, sans-serif;
 }
-.header-left { display: flex; align-items: center; gap: 16px; }
-.wordmark { font-size: 15px; font-weight: 600; letter-spacing: -.3px; color: var(–text); }
-.wordmark span { color: var(–accent2); }
-.mode-tabs {
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* ── HEADER ── */
+.hdr {
+position: sticky; top: 0; z-index: 200;
+background: rgba(12,12,14,0.92);
+backdrop-filter: blur(14px);
+-webkit-backdrop-filter: blur(14px);
+border-bottom: 1px solid var(–border);
+height: 52px;
+display: flex; align-items: center;
+padding: 0 16px; gap: 12px;
+}
+.hdr-logo { font-size: 14px; font-weight: 600; letter-spacing: -.2px; white-space: nowrap; }
+.hdr-logo em { color: var(–accent); font-style: normal; }
+.hdr-tabs {
 display: flex; gap: 2px;
 background: var(–surface2);
-border-radius: 8px; padding: 3px;
+border-radius: 8px; padding: 3px; flex-shrink: 0;
 }
-.mode-tab {
-padding: 5px 14px; border-radius: 6px; font-size: 13px;
-font-family: ‘DM Sans’, sans-serif; font-weight: 500;
-cursor: pointer; border: none; background: none;
-color: var(–muted); transition: all .18s;
+.hdr-tab {
+padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;
+cursor: pointer; border: none; background: none; color: var(–muted);
+transition: background .15s, color .15s;
 }
-.mode-tab.active { background: var(–surface); color: var(–text); }
-.header-right { display: flex; align-items: center; gap: 10px; }
-.limit-pill {
+.hdr-tab.on { background: var(–surface3); color: var(–text); }
+.hdr-spacer { flex: 1; }
+.hdr-limit {
 display: flex; align-items: center; gap: 6px;
-background: var(–surface2); border: 1px solid var(–border);
-border-radius: 8px; padding: 5px 12px; font-size: 13px; color: var(–muted);
+font-size: 12px; color: var(–muted); flex-shrink: 0;
 }
-.limit-pill input {
-width: 44px; background: none; border: none; color: var(–text);
-font-family: ‘DM Mono’, monospace; font-size: 13px; text-align: center; font-weight: 500;
+.hdr-limit input {
+width: 46px; background: var(–surface2); border: 1px solid var(–border2);
+border-radius: 6px; color: var(–text); font-family: ‘DM Mono’, monospace;
+font-size: 13px; text-align: center; padding: 3px 4px;
 }
-.limit-pill input:focus { outline: none; color: var(–accent2); }
-.btn-export {
-padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
-font-family: ‘DM Sans’, sans-serif; cursor: pointer; border: none;
-background: var(–accent); color: #fff; transition: opacity .15s;
+.hdr-limit input:focus { outline: none; border-color: var(–accent); }
+.btn-copy {
+padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500;
+cursor: pointer; border: none; background: var(–accent); color: #fff;
+transition: opacity .15s; white-space: nowrap; flex-shrink: 0;
 }
-.btn-export:hover { opacity: .85; }
+.btn-copy:active { opacity: .75; }
 
-/* LAYOUT */
-.layout {
+/* ── ROOT LAYOUT ──
+Desktop: sidebar left | main right
+Mobile:  stacked (picker drawer on top, grid below)
+*/
+.root {
 display: grid;
-grid-template-columns: 300px 1fr;
-height: calc(100vh - 56px);
+grid-template-columns: 280px 1fr;
+height: calc(100dvh - 52px);
 }
 
-/* SIDEBAR */
+/* ── SIDEBAR (manual) ── */
 .sidebar {
 border-right: 1px solid var(–border);
+background: var(–surface);
 display: flex; flex-direction: column;
 overflow: hidden;
-background: var(–surface);
 }
-.sidebar-search { padding: 14px 16px; border-bottom: 1px solid var(–border); }
-.search-box {
+.sb-filters { padding: 10px 12px; border-bottom: 1px solid var(–border); display: flex; flex-direction: column; gap: 8px; }
+
+/* shared input style */
+.inp {
 width: 100%; background: var(–surface2);
-border: 1px solid var(–border); border-radius: var(–radius-sm);
-color: var(–text); font-family: ‘DM Sans’, sans-serif; font-size: 14px;
-padding: 8px 12px; transition: border-color .15s;
+border: 1px solid var(–border2); border-radius: var(–r-sm);
+color: var(–text); font-size: 14px; padding: 8px 11px;
+transition: border-color .15s;
 }
-.search-box:focus { outline: none; border-color: var(–accent); }
-.search-box::placeholder { color: var(–muted); }
-.poke-list { flex: 1; overflow-y: auto; }
-.poke-list::-webkit-scrollbar { width: 4px; }
-.poke-list::-webkit-scrollbar-thumb { background: var(–border2); border-radius: 4px; }
-.poke-row {
-display: flex; align-items: center; gap: 10px;
-padding: 7px 16px; cursor: pointer; transition: background .12s; user-select: none;
+.inp:focus { outline: none; border-color: var(–accent); }
+.inp::placeholder { color: var(–muted); }
+
+/* type filter buttons */
+.type-filters { display: flex; flex-wrap: wrap; gap: 4px; }
+.tf {
+font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 5px;
+color: rgba(255,255,255,.85); border: 2px solid transparent;
+cursor: pointer; transition: opacity .12s, border-color .12s;
+text-transform: uppercase; letter-spacing: .03em; line-height: 1.4;
+background: var(–type-bg, #555);
 }
-.poke-row:hover { background: var(–surface2); }
-.poke-row.in-dex { opacity: .4; }
-.poke-row img { width: 32px; height: 32px; image-rendering: pixelated; flex-shrink: 0; }
-.poke-row .pnum { font-family: ‘DM Mono’, monospace; font-size: 11px; color: var(–muted); min-width: 28px; }
-.poke-row .pname { font-size: 14px; flex: 1; }
-.poke-row .check { color: var(–accent2); font-size: 12px; }
-.sidebar-footer {
-padding: 12px 16px; border-top: 1px solid var(–border);
-display: flex; flex-direction: column; gap: 8px;
+.tf:hover { opacity: .8; }
+.tf.on { border-color: #fff; }
+.tf.off { opacity: .35; }
+
+/* pokemon rows */
+.sb-list { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+.sb-list::-webkit-scrollbar { width: 3px; }
+.sb-list::-webkit-scrollbar-thumb { background: var(–border2); border-radius: 3px; }
+.pk-row {
+display: flex; align-items: center; gap: 9px;
+padding: 6px 12px; cursor: pointer; transition: background .1s;
+user-select: none; min-height: 44px;
+}
+.pk-row:active, .pk-row:hover { background: var(–surface2); }
+.pk-row.faded { opacity: .38; }
+.pk-row img { width: 34px; height: 34px; image-rendering: pixelated; flex-shrink: 0; }
+.pk-num { font-family: ‘DM Mono’, monospace; font-size: 11px; color: var(–muted); min-width: 28px; flex-shrink: 0; }
+.pk-name { font-size: 14px; flex: 1; }
+.pk-types { display: flex; gap: 3px; flex-shrink: 0; }
+.pk-type-dot { width: 8px; height: 8px; border-radius: 50%; }
+.pk-check { color: var(–accent); font-size: 13px; flex-shrink: 0; }
+.sb-footer {
+padding: 10px 12px; border-top: 1px solid var(–border);
+display: flex; flex-direction: column; gap: 6px;
 }
 .btn-add {
-width: 100%; padding: 10px; border-radius: var(–radius-sm);
-font-family: ‘DM Sans’, sans-serif; font-size: 14px; font-weight: 500;
+padding: 10px; border-radius: var(–r-sm); font-size: 14px; font-weight: 500;
 cursor: pointer; border: none; background: var(–accent); color: #fff; transition: opacity .15s;
 }
-.btn-add:hover { opacity: .85; }
-.btn-clear {
-width: 100%; padding: 8px; border-radius: var(–radius-sm);
-font-family: ‘DM Sans’, sans-serif; font-size: 13px; font-weight: 500;
-cursor: pointer; border: 1px solid var(–border2);
-background: none; color: var(–muted); transition: color .15s, border-color .15s;
-}
-.btn-clear:hover { color: var(–red); border-color: var(–red); }
-
-/* MAIN */
-.main { display: flex; flex-direction: column; overflow: hidden; }
-
-/* WIZARD PANEL */
-.wizard-panel {
-padding: 16px 20px;
-border-bottom: 1px solid var(–border);
-background: var(–surface);
-flex-shrink: 0;
-}
-.wizard-label {
-font-size: 11px; font-weight: 500; letter-spacing: .06em;
-text-transform: uppercase; color: var(–muted); margin-bottom: 10px;
-}
-.wizard-steps { display: flex; flex-wrap: wrap; gap: 6px; }
-.wizard-step {
-display: flex; align-items: center; gap: 8px;
-background: var(–surface2); border: 1px solid var(–border);
-border-radius: var(–radius-sm); padding: 7px 10px;
-cursor: pointer; transition: border-color .15s, background .15s;
-min-width: 148px; flex: 1;
-}
-.wizard-step:hover { border-color: var(–border2); background: var(–bg); }
-.wizard-step.done { border-color: rgba(124,111,255,.5); }
-.wizard-step.active { border-color: var(–accent2); background: rgba(124,111,255,.08); }
-.step-icon { font-size: 18px; flex-shrink: 0; }
-.step-text { flex: 1; min-width: 0; }
-.step-title { font-size: 11px; font-weight: 500; color: var(–muted); }
-.step-value { font-size: 13px; color: var(–text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.step-value.empty { color: var(–muted); font-style: italic; }
-.step-done-mark { color: var(–accent2); font-size: 13px; flex-shrink: 0; }
-
-/* WIZARD MODAL */
-.wizard-modal-bg {
-position: fixed; inset: 0; z-index: 500;
-background: rgba(0,0,0,.72); backdrop-filter: blur(4px);
-display: flex; align-items: center; justify-content: center;
-opacity: 0; pointer-events: none; transition: opacity .2s;
-}
-.wizard-modal-bg.open { opacity: 1; pointer-events: all; }
-.wizard-modal {
-background: var(–surface); border: 1px solid var(–border2);
-border-radius: 16px; padding: 24px; width: 460px; max-width: 95vw;
-transform: translateY(10px); transition: transform .2s;
-max-height: 82vh; display: flex; flex-direction: column; gap: 0;
-}
-.wizard-modal-bg.open .wizard-modal { transform: translateY(0); }
-.modal-title { font-size: 19px; font-weight: 600; margin-bottom: 3px; }
-.modal-sub { font-size: 13px; color: var(–muted); margin-bottom: 14px; line-height: 1.5; }
-.modal-search {
-width: 100%; background: var(–surface2);
-border: 1px solid var(–border); border-radius: var(–radius-sm);
-color: var(–text); font-family: ‘DM Sans’, sans-serif; font-size: 14px;
-padding: 9px 12px; margin-bottom: 10px; transition: border-color .15s; flex-shrink: 0;
-}
-.modal-search:focus { outline: none; border-color: var(–accent); }
-.modal-search::placeholder { color: var(–muted); }
-.modal-list { overflow-y: auto; flex: 1; margin: 0 -4px; padding: 0 4px; }
-.modal-list::-webkit-scrollbar { width: 4px; }
-.modal-list::-webkit-scrollbar-thumb { background: var(–border2); border-radius: 4px; }
-.modal-row {
-display: flex; align-items: center; gap: 10px;
-padding: 7px 8px; border-radius: var(–radius-sm);
-cursor: pointer; transition: background .12s;
-}
-.modal-row:hover { background: var(–surface2); }
-.modal-row img { width: 40px; height: 40px; image-rendering: pixelated; flex-shrink: 0; }
-.modal-row .pnum { font-family: ‘DM Mono’, monospace; font-size: 11px; color: var(–muted); min-width: 32px; }
-.modal-row .pname { font-size: 15px; flex: 1; }
-.modal-row .types { display: flex; gap: 4px; flex-shrink: 0; }
-.type-chip {
-font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px;
-color: #fff; text-transform: uppercase; letter-spacing: .04em;
-}
-.modal-skip {
-margin-top: 10px; width: 100%; padding: 9px; border-radius: var(–radius-sm);
-font-family: ‘DM Sans’, sans-serif; font-size: 13px; font-weight: 500;
+.btn-add:active { opacity: .75; }
+.btn-clr {
+padding: 8px; border-radius: var(–r-sm); font-size: 13px; font-weight: 500;
 cursor: pointer; border: 1px solid var(–border2); background: none; color: var(–muted);
-flex-shrink: 0; transition: color .15s;
+transition: color .15s, border-color .15s;
 }
-.modal-skip:hover { color: var(–text); }
+.btn-clr:active { color: var(–red); border-color: var(–red); }
 
-/* DEX SCROLL */
-.dex-scroll { flex: 1; overflow-y: auto; padding: 18px 18px 60px; }
-.dex-scroll::-webkit-scrollbar { width: 4px; }
-.dex-scroll::-webkit-scrollbar-thumb { background: var(–border); border-radius: 4px; }
-.dex-header {
-display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+/* ── MAIN AREA ── */
+.main { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+/* ── WIZARD PANEL ── */
+.wiz-panel {
+background: var(–surface);
+border-bottom: 1px solid var(–border);
+flex-shrink: 0;
+overflow-x: auto;
+overscroll-behavior-x: contain;
 }
-.dex-counter { font-family: ‘DM Mono’, monospace; font-size: 13px; color: var(–muted); }
-.dex-counter strong { color: var(–text); font-weight: 500; }
+.wiz-inner {
+padding: 10px 14px;
+display: flex; gap: 6px;
+min-width: max-content;
+}
+.wiz-step {
+display: flex; align-items: center; gap: 7px;
+background: var(–surface2); border: 1px solid var(–border);
+border-radius: var(–r-sm); padding: 7px 10px;
+cursor: pointer; transition: border-color .15s;
+min-width: 130px; max-width: 160px;
+white-space: nowrap; flex-shrink: 0;
+}
+.wiz-step:hover { border-color: var(–border2); }
+.wiz-step.done { border-color: rgba(124,111,255,.45); }
+.wiz-step.active { border-color: var(–accent); background: var(–accent-bg); }
+.ws-icon { font-size: 16px; flex-shrink: 0; }
+.ws-body { flex: 1; min-width: 0; }
+.ws-label { font-size: 10px; font-weight: 500; color: var(–muted); text-transform: uppercase; letter-spacing: .05em; }
+.ws-val { font-size: 12px; color: var(–text); overflow: hidden; text-overflow: ellipsis; }
+.ws-val.empty { color: var(–muted); font-style: italic; }
+.ws-check { color: var(–accent); font-size: 12px; flex-shrink: 0; }
 
-/* DEX GRID */
+/* ── DEX SCROLL AREA ── */
+.dex-area { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 14px 12px 80px; }
+.dex-area::-webkit-scrollbar { width: 3px; }
+.dex-area::-webkit-scrollbar-thumb { background: var(–border); border-radius: 3px; }
+
+.dex-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.dex-count { font-family: ‘DM Mono’, monospace; font-size: 12px; color: var(–muted); }
+.dex-count strong { color: var(–text); font-weight: 500; }
+
 .dex-grid {
 display: grid;
-grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
-gap: 8px;
+grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
+gap: 7px;
 }
+
+/* card */
 .dex-card {
 background: var(–surface);
 border: 1px solid var(–border);
-border-radius: var(–radius);
-padding: 10px 6px 8px;
+border-radius: var(–r);
+padding: 8px 5px 7px;
 display: flex; flex-direction: column; align-items: center;
 position: relative; cursor: grab; user-select: none;
-transition: border-color .15s, transform .12s;
-animation: popin .28s cubic-bezier(.34,1.56,.64,1) both;
+transition: border-color .12s;
+animation: pop .22s cubic-bezier(.34,1.56,.64,1) both;
 }
-@keyframes popin { from { opacity:0; transform:scale(.65); } to { opacity:1; transform:scale(1); } }
+@keyframes pop { from { opacity:0; transform:scale(.6); } to { opacity:1; transform:scale(1); } }
 .dex-card:hover { border-color: var(–border2); }
-.dex-card.dragging { opacity: .25; cursor: grabbing; }
-.dex-card.drag-over { border-color: var(–accent); transform: scale(1.05); }
-.dex-card .card-num {
-font-family: ‘DM Mono’, monospace; font-size: 9px; color: var(–muted);
-margin-bottom: 2px; align-self: flex-start; padding-left: 2px;
+.dex-card.dragging { opacity: .2; }
+.dex-card.drag-over { border-color: var(–accent); transform: scale(1.04); }
+.dc-num { font-family:‘DM Mono’,monospace; font-size:9px; color:var(–muted); align-self:flex-start; padding-left:2px; margin-bottom:2px; }
+.dc-img { width:60px; height:60px; image-rendering:pixelated; }
+.dc-name { font-size:10px; font-weight:500; text-align:center; margin-top:4px; line-height:1.25; color:var(–text); }
+.dc-rm {
+position:absolute; top:3px; right:5px;
+background:none; border:none; color:var(–muted);
+font-size:12px; cursor:pointer; line-height:1; padding:2px;
+transition:color .1s; min-width:20px; min-height:20px;
+display:flex; align-items:center; justify-content:center;
 }
-.dex-card img { width: 62px; height: 62px; image-rendering: pixelated; }
-.dex-card .card-name {
-font-size: 11px; font-weight: 500; text-align: center;
-color: var(–text); margin-top: 4px; line-height: 1.2;
-}
-.dex-card .remove-x {
-position: absolute; top: 4px; right: 6px;
-background: none; border: none; color: var(–muted);
-font-size: 13px; cursor: pointer; line-height: 1; padding: 0;
-transition: color .12s;
-}
-.dex-card .remove-x:hover { color: var(–red); }
+.dc-rm:hover { color:var(–red); }
+
 .empty-card {
-border: 1px dashed var(–border);
-border-radius: var(–radius); min-height: 108px;
-display: flex; align-items: center; justify-content: center;
-color: var(–border2); font-size: 20px;
+border:1px dashed var(–border); border-radius:var(–r);
+min-height:100px; display:flex; align-items:center; justify-content:center;
+color:var(–border2); font-size:18px;
 }
-
-/* TYPE BAR */
-.type-bar { margin-top: 20px; }
-.type-bar-title {
-font-size: 11px; font-weight: 500; text-transform: uppercase;
-letter-spacing: .06em; color: var(–muted); margin-bottom: 10px;
-}
-.type-row { display: flex; flex-wrap: wrap; gap: 5px; }
-.type-pill {
-display: flex; align-items: center; gap: 5px;
-padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
-color: rgba(255,255,255,.92); text-transform: uppercase; letter-spacing: .03em;
-transition: transform .12s; cursor: default;
-}
-.type-pill:hover { transform: scale(1.06); }
-.type-pill.zero { opacity: .18; }
-.type-pill .tcount {
-background: rgba(0,0,0,.28); border-radius: 3px;
-padding: 0 5px; font-size: 11px;
-}
-
-/* EMPTY STATE */
 .empty-state {
-grid-column: 1 / -1; display: flex; flex-direction: column;
-align-items: center; justify-content: center;
-gap: 12px; min-height: 260px; color: var(–muted); text-align: center; padding: 40px;
+grid-column:1/-1; display:flex; flex-direction:column; align-items:center;
+justify-content:center; gap:10px; min-height:200px;
+color:var(–muted); text-align:center; padding:30px;
 }
-.empty-state .big { font-size: 44px; }
-.empty-state p { font-size: 14px; max-width: 260px; line-height: 1.6; }
+.empty-state .big { font-size:40px; }
+.empty-state p { font-size:14px; max-width:240px; line-height:1.6; }
 
-/* TOAST */
+/* ── TYPE COVERAGE ── */
+.coverage { margin-top:18px; }
+.cov-title { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:.06em; color:var(–muted); margin-bottom:9px; }
+.cov-grid { display:flex; flex-wrap:wrap; gap:5px; }
+.cov-pill {
+display:flex; align-items:center; gap:5px;
+padding:3px 9px; border-radius:5px; font-size:11px; font-weight:600;
+color:rgba(255,255,255,.9); text-transform:uppercase; letter-spacing:.03em;
+}
+.cov-pill.zero { opacity:.18; }
+.cov-n { background:rgba(0,0,0,.3); border-radius:3px; padding:0 4px; font-size:10px; min-width:16px; text-align:center; }
+
+/* ── MODAL ── */
+.modal-bg {
+position:fixed; inset:0; z-index:400;
+background:rgba(0,0,0,.75); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+display:flex; align-items:flex-end; justify-content:center;
+opacity:0; pointer-events:none; transition:opacity .2s;
+}
+@media (min-width:600px) {
+.modal-bg { align-items:center; }
+}
+.modal-bg.open { opacity:1; pointer-events:all; }
+.modal {
+background:var(–surface); border:1px solid var(–border2);
+border-radius:18px 18px 0 0; padding:20px 16px 32px;
+width:100%; max-width:480px;
+transform:translateY(24px); transition:transform .22s cubic-bezier(.34,1,.64,1);
+max-height:90dvh; display:flex; flex-direction:column; gap:0;
+}
+@media (min-width:600px) {
+.modal { border-radius:16px; max-height:82vh; }
+}
+.modal-bg.open .modal { transform:translateY(0); }
+.modal-drag { width:36px; height:4px; background:var(–border2); border-radius:2px; margin:0 auto 14px; flex-shrink:0; }
+@media (min-width:600px) { .modal-drag { display:none; } }
+.modal-title { font-size:18px; font-weight:600; margin-bottom:2px; }
+.modal-sub { font-size:13px; color:var(–text2); margin-bottom:12px; line-height:1.5; }
+
+/* type filter row in modal */
+.modal-types { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px; flex-shrink:0; }
+.mtf {
+font-size:10px; font-weight:600; padding:3px 8px; border-radius:5px;
+color:rgba(255,255,255,.85); border:2px solid transparent;
+cursor:pointer; text-transform:uppercase; letter-spacing:.03em; line-height:1.4;
+transition:opacity .1s, border-color .1s;
+}
+.mtf:hover { opacity:.8; }
+.mtf.on { border-color:#fff; }
+
+.modal-search { flex-shrink:0; margin-bottom:8px; }
+.modal-list { overflow-y:auto; flex:1; overscroll-behavior:contain; }
+.modal-list::-webkit-scrollbar { width:3px; }
+.modal-list::-webkit-scrollbar-thumb { background:var(–border2); border-radius:3px; }
+.m-row {
+display:flex; align-items:center; gap:9px;
+padding:7px 6px; border-radius:var(–r-sm);
+cursor:pointer; transition:background .1s; min-height:48px;
+}
+.m-row:hover, .m-row:active { background:var(–surface2); }
+.m-row img { width:42px; height:42px; image-rendering:pixelated; flex-shrink:0; }
+.m-num { font-family:‘DM Mono’,monospace; font-size:11px; color:var(–muted); min-width:30px; flex-shrink:0; }
+.m-name { font-size:15px; flex:1; }
+.m-chips { display:flex; gap:3px; flex-shrink:0; }
+.chip { font-size:10px; font-weight:600; padding:2px 6px; border-radius:4px; color:#fff; text-transform:uppercase; letter-spacing:.03em; }
+
+/* load-more sentinel */
+.sentinel { height:1px; }
+
+.modal-skip {
+margin-top:10px; width:100%; padding:10px; border-radius:var(–r-sm);
+font-size:13px; font-weight:500; cursor:pointer;
+border:1px solid var(–border2); background:none; color:var(–muted);
+flex-shrink:0; transition:color .15s;
+}
+.modal-skip:active { color:var(–text); }
+
+/* ── MOBILE DRAWER ──
+On mobile the sidebar becomes a bottom sheet toggled by a FAB
+*/
+.fab {
+display:none;
+position:fixed; bottom:20px; right:16px; z-index:300;
+width:52px; height:52px; border-radius:50%;
+background:var(–accent); border:none; color:#fff;
+font-size:22px; cursor:pointer; box-shadow:0 4px 20px rgba(0,0,0,.4);
+align-items:center; justify-content:center;
+transition:transform .15s;
+}
+.fab:active { transform:scale(.92); }
+
+.drawer-bg {
+display:none;
+position:fixed; inset:0; z-index:250;
+background:rgba(0,0,0,.6);
+}
+.drawer {
+position:fixed; bottom:0; left:0; right:0; z-index:260;
+background:var(–surface);
+border-radius:18px 18px 0 0;
+border-top:1px solid var(–border2);
+display:flex; flex-direction:column;
+max-height:70dvh;
+transform:translateY(100%);
+transition:transform .25s cubic-bezier(.34,1,.64,1);
+}
+.drawer.open { transform:translateY(0); }
+.drawer-handle { width:36px; height:4px; background:var(–border2); border-radius:2px; margin:10px auto 8px; flex-shrink:0; }
+
+/* ── TOAST ── */
 .toast {
-position: fixed; bottom: 20px; left: 50%;
-transform: translateX(-50%) translateY(14px);
-background: var(–surface2); border: 1px solid var(–border2);
-color: var(–text); padding: 10px 20px; border-radius: 10px;
-font-size: 14px; font-weight: 500; opacity: 0;
-transition: all .25s; z-index: 9999; white-space: nowrap;
-box-shadow: 0 8px 32px rgba(0,0,0,.4);
+position:fixed; bottom:24px; left:50%;
+transform:translateX(-50%) translateY(12px);
+background:var(–surface3); border:1px solid var(–border2);
+color:var(–text); padding:9px 18px; border-radius:10px;
+font-size:14px; font-weight:500; opacity:0;
+transition:all .22s; z-index:9999; white-space:nowrap;
+box-shadow:0 6px 24px rgba(0,0,0,.5); pointer-events:none;
 }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-/* MOBILE */
-@media (max-width: 700px) {
-.layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; min-height: calc(100vh - 56px); }
-.sidebar { border-right: none; border-bottom: 1px solid var(–border); max-height: 42vh; }
-.dex-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
-.header { padding: 0 14px; gap: 8px; }
-.limit-pill { display: none; }
+/* ── RESPONSIVE ── */
+@media (max-width:640px) {
+.root { grid-template-columns:1fr; height:auto; min-height:calc(100dvh - 52px); }
+.sidebar { display:none; }
+.fab { display:flex; }
+.drawer-bg { display:block; opacity:0; pointer-events:none; transition:opacity .2s; }
+.drawer-bg.open { opacity:1; pointer-events:all; }
+.dex-grid { grid-template-columns:repeat(auto-fill,minmax(72px,1fr)); }
+.wiz-panel { -webkit-overflow-scrolling:touch; }
+.hdr-limit { display:none; }
+/* show limit inside drawer */
+.drawer-limit { display:flex !important; }
 }
-@media (orientation: landscape) and (max-height: 480px) {
-.layout { grid-template-columns: 230px 1fr; height: calc(100vh - 48px); }
-.wizard-panel { padding: 10px 14px; }
-.wizard-step { min-width: 120px; padding: 5px 8px; }
+@media (min-width:641px) {
+.drawer, .drawer-bg, .fab { display:none !important; }
+.drawer-limit { display:none; }
 }
+.drawer-limit {
+display:none; padding:0 12px 2px;
+align-items:center; gap:8px; font-size:13px; color:var(–muted);
+}
+.drawer-limit input {
+width:50px; background:var(–surface2); border:1px solid var(–border2);
+border-radius:6px; color:var(–text); font-family:‘DM Mono’,monospace;
+font-size:13px; text-align:center; padding:4px 6px;
+}
+.drawer-limit input:focus { outline:none; border-color:var(–accent); }
 </style>
 
 </head>
 <body>
 
-<header class="header">
-  <div class="header-left">
-    <div class="wordmark">pokédex <span>builder</span></div>
-    <div class="mode-tabs">
-      <button class="mode-tab active" id="tabWizard">Wizard</button>
-      <button class="mode-tab" id="tabManual">Manual</button>
-    </div>
+<!-- HEADER -->
+
+<header class="hdr">
+  <div class="hdr-logo">pokédex <em>builder</em></div>
+  <div class="hdr-tabs">
+    <button class="hdr-tab on" id="tabWiz">Wizard</button>
+    <button class="hdr-tab" id="tabMan">Manual</button>
   </div>
-  <div class="header-right">
-    <div class="limit-pill">
-      <span>Limit</span>
-      <input type="number" id="limitInput" value="151" min="1" max="1025">
-    </div>
-    <button class="btn-export" id="exportBtn">Copy list</button>
+  <div class="hdr-spacer"></div>
+  <div class="hdr-limit">
+    <span>Limit</span>
+    <input type="number" id="limitInput" value="151" min="1" max="1025">
   </div>
+  <button class="btn-copy" id="copyBtn">Copy list</button>
 </header>
 
-<div class="layout">
+<!-- ROOT GRID -->
 
-  <!-- SIDEBAR (manual) -->
+<div class="root">
 
-  <div class="sidebar" id="sidebar" style="display:none">
-    <div class="sidebar-search">
-      <input class="search-box" id="searchBox" placeholder="Search Pokémon…">
+  <!-- SIDEBAR (desktop manual) -->
+
+  <aside class="sidebar" id="sidebar" style="display:none">
+    <div class="sb-filters">
+      <input class="inp" id="sbSearch" placeholder="Search name or #…" autocomplete="off">
+      <div class="type-filters" id="sbTypeFilters"></div>
     </div>
-    <div class="poke-list" id="pokeList"></div>
-    <div class="sidebar-footer">
-      <button class="btn-add" id="addBtn">Add + evolutions</button>
-      <button class="btn-clear" id="clearBtn">Clear all</button>
+    <div class="sb-list" id="sbList"></div>
+    <div class="sb-footer">
+      <button class="btn-add" id="sbAddBtn">Add + evolutions</button>
+      <button class="btn-clr" id="sbClearBtn">Clear all</button>
     </div>
-  </div>
+  </aside>
 
   <!-- MAIN -->
 
-  <div class="main" id="mainPanel">
-    <!-- WIZARD BAR -->
-    <div class="wizard-panel" id="wizardPanel">
-      <div class="wizard-label">Tap a slot to pick your Pokémon</div>
-      <div class="wizard-steps" id="wizardSteps"></div>
-    </div>
+  <main class="main">
 
 ```
-<!-- DEX -->
-<div class="dex-scroll" id="dexScroll">
-  <div class="dex-header">
-    <div class="dex-counter"><strong id="dexCount">0</strong> / <span id="dexLimitLabel">151</span> Pokémon</div>
+<!-- WIZARD BAR -->
+<div class="wiz-panel" id="wizPanel">
+  <div class="wiz-inner" id="wizSteps"></div>
+</div>
+
+<!-- DEX GRID -->
+<div class="dex-area" id="dexArea">
+  <div class="dex-hdr">
+    <div class="dex-count"><strong id="dexCount">0</strong> / <span id="dexLimit2">151</span></div>
   </div>
   <div class="dex-grid" id="dexGrid"></div>
-  <div class="type-bar" id="typeBar">
-    <div class="type-bar-title">Type coverage</div>
-    <div class="type-row" id="typeRow"></div>
+  <div class="coverage" id="coverage">
+    <div class="cov-title">Type coverage</div>
+    <div class="cov-grid" id="covGrid"></div>
   </div>
 </div>
 ```
 
+  </main>
+</div>
+
+<!-- MOBILE FAB -->
+
+<button class="fab" id="fab">＋</button>
+
+<!-- MOBILE DRAWER (manual) -->
+
+<div class="drawer-bg" id="drawerBg"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-limit" id="drawerLimit">
+    <span>Limit</span>
+    <input type="number" id="limitInputMobile" value="151" min="1" max="1025">
+  </div>
+  <div class="sb-filters" style="padding:6px 12px 10px">
+    <input class="inp" id="drawerSearch" placeholder="Search name or #…" autocomplete="off">
+    <div class="type-filters" id="drawerTypeFilters"></div>
+  </div>
+  <div class="sb-list" id="drawerList" style="flex:1;overflow-y:auto;overscroll-behavior:contain"></div>
+  <div class="sb-footer">
+    <button class="btn-add" id="drawerAddBtn">Add + evolutions</button>
+    <button class="btn-clr" id="drawerClearBtn">Clear all</button>
   </div>
 </div>
 
 <!-- WIZARD MODAL -->
 
-<div class="wizard-modal-bg" id="wizardModalBg">
-  <div class="wizard-modal">
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-drag"></div>
     <div class="modal-title" id="modalTitle"></div>
     <div class="modal-sub" id="modalSub"></div>
-    <input class="modal-search" id="modalSearch" placeholder="Search…" autocomplete="off">
+    <div class="modal-types" id="modalTypes"></div>
+    <input class="inp modal-search" id="modalSearch" placeholder="Search…" autocomplete="off">
     <div class="modal-list" id="modalList"></div>
+    <div class="sentinel" id="modalSentinel"></div>
     <button class="modal-skip" id="modalSkip">Skip →</button>
   </div>
 </div>
@@ -406,53 +528,86 @@ box-shadow: 0 8px 32px rgba(0,0,0,.4);
 <div class="toast" id="toast"></div>
 
 <script>
+'use strict';
+
+// ── CONSTANTS ──────────────────────────────────────────────────────────────────
+
+const API    = 'https://pokeapi.co/api/v2/';
+const SPR    = id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+const TYPES  = ['normal','fire','water','electric','grass','ice','fighting','poison',
+                'ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+
 const WIZARD_STEPS = [
-  { id:'grass-starter',   icon:'🌿', title:'Grass starter',       hint:'The grass-type starter for your region',                       types:['grass'] },
-  { id:'fire-starter',    icon:'🔥', title:'Fire starter',        hint:'The fire-type starter Pokémon',                                types:['fire'] },
-  { id:'water-starter',   icon:'💧', title:'Water starter',       hint:'The water-type starter Pokémon',                               types:['water'] },
-  { id:'early-bird',      icon:'🐦', title:'Early route bird',    hint:'The early flying-type (Pidgey, Starly, Taillow…)',             types:['flying','normal'] },
-  { id:'early-bug',       icon:'🐛', title:'Early route bug',     hint:'The early bug-type (Caterpie, Weedle, Wurmple…)',              types:['bug'] },
-  { id:'early-rodent',    icon:'🐭', title:'Route 1 rodent',      hint:'The small early normal-type rodent (Rattata, Zigzagoon…)',     types:['normal'] },
-  { id:'fossil',          icon:'🦕', title:'Fossil Pokémon',      hint:'A revived fossil Pokémon (usually Rock-type)',                 types:['rock'] },
-  { id:'ghost',           icon:'👻', title:'Ghost-type',          hint:'Your region\'s ghost-type representative',                     types:['ghost'] },
-  { id:'electric',        icon:'⚡', title:'Electric-type',       hint:'The electric-type of the region (Pikachu, Electabuzz…)',       types:['electric'] },
-  { id:'ice',             icon:'🧊', title:'Ice-type',            hint:'Your region\'s ice-type Pokémon',                              types:['ice'] },
-  { id:'pseudo',          icon:'🐉', title:'Pseudo-legendary',    hint:'The 600-BST powerhouse at the end (Dragonite, Tyranitar…)',   types:['dragon'] },
-  { id:'version-leg-1',   icon:'✨', title:'Version legendary 1', hint:'First version\'s box legendary',                              types:[] },
-  { id:'version-leg-2',   icon:'🌟', title:'Version legendary 2', hint:'Second version\'s box legendary',                             types:[] },
-  { id:'mythical',        icon:'🌈', title:'Mythical',            hint:'The event / mythical Pokémon for your region',                types:[] },
+  {id:'grass',  icon:'🌿', label:'Grass starter',      hint:'The grass-type starter for your region',                    types:['grass']},
+  {id:'fire',   icon:'🔥', label:'Fire starter',        hint:'The fire-type starter Pokémon',                             types:['fire']},
+  {id:'water',  icon:'💧', label:'Water starter',       hint:'The water-type starter Pokémon',                            types:['water']},
+  {id:'bird',   icon:'🐦', label:'Early route bird',    hint:'The early flying-type (e.g. Pidgey, Starly, Taillow…)',    types:['flying']},
+  {id:'bug',    icon:'🐛', label:'Early route bug',     hint:'The early bug-type (e.g. Caterpie, Weedle, Wurmple…)',     types:['bug']},
+  {id:'rodent', icon:'🐭', label:'Route 1 rodent',      hint:'The small normal-type rodent (e.g. Rattata, Zigzagoon…)',  types:['normal']},
+  {id:'fossil', icon:'🦕', label:'Fossil Pokémon',      hint:'A revived fossil Pokémon (usually Rock-type)',             types:['rock']},
+  {id:'ghost',  icon:'👻', label:'Ghost-type',          hint:'Your region\'s ghost-type representative',                 types:['ghost']},
+  {id:'elec',   icon:'⚡', label:'Electric-type',       hint:'The electric-type of the region',                          types:['electric']},
+  {id:'ice',    icon:'🧊', label:'Ice-type',            hint:'Your region\'s ice-type Pokémon',                          types:['ice']},
+  {id:'pseudo', icon:'🐉', label:'Pseudo-legendary',    hint:'The 600-BST powerhouse (e.g. Dragonite, Tyranitar…)',     types:['dragon']},
+  {id:'legA',   icon:'✨', label:'Version legendary A', hint:'First version\'s box legendary',                           types:[]},
+  {id:'legB',   icon:'🌟', label:'Version legendary B', hint:'Second version\'s box legendary',                          types:[]},
+  {id:'myth',   icon:'🌈', label:'Mythical',            hint:'The event/mythical Pokémon for your region',               types:[]},
 ];
 
-const TYPES = ['normal','fire','water','electric','grass','ice','fighting','poison',
-               'ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
-const API = 'https://pokeapi.co/api/v2/';
-const SPRITE = id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+// ── STATE ──────────────────────────────────────────────────────────────────────
 
-let allPokemon = [], dex = [], dexLimit = 151;
-let selectedId = null, wizardMode = true;
-let wizardAnswers = {}, activeStepId = null;
-let dragSrcIdx = null, evoChains = {};
+let allPokemon   = [];   // [{id, name, types[], spriteUrl, loaded, url}]
+let dex          = [];   // ordered Pokémon in builder
+let dexLimit     = 151;
+let wizMode      = true;
+let wizAnswers   = {};   // stepId → pokemonId
+let activeStep   = null;
+let selectedId   = null; // manual mode selection
+let evoCache     = {};   // id → [ids]
+let dragSrc      = null;
 
-// INIT
+// modal virtual scroll
+let modalPool    = [];   // filtered list for modal
+let modalShown   = 0;
+const MODAL_PAGE = 40;
+
+// sidebar virtual scroll
+let sbPool       = [];
+let sbShown      = 0;
+const SB_PAGE    = 60;
+
+// type filters: null = all, Set = active types
+let sbTypeFilter    = new Set(); // empty = all
+let modalTypeFilter = new Set(); // empty = all (sidebar for wizard modal)
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+
 async function init() {
   try {
-    const res = await fetch(`${API}pokemon?limit=1025&offset=0`);
+    const res  = await fetch(`${API}pokemon?limit=1025&offset=0`);
     const data = await res.json();
     allPokemon = data.results.map((p, i) => ({
-      id: i+1, name: p.name, types: [], spriteUrl: SPRITE(i+1), loaded: false, url: p.url
+      id: i+1, name: p.name, types: [], spriteUrl: SPR(i+1),
+      loaded: false, url: p.url
     }));
-    batchTypes(0, Math.min(300, allPokemon.length));
+    // load types in background batches of 100
+    loadTypeBatch(0);
   } catch(e) {
-    showToast('Failed to load Pokémon data — check connection');
+    toast('Could not load Pokémon — check your connection');
   }
-  renderWizardSteps();
-  renderDexGrid();
-  renderTypeChart();
+  renderWiz();
+  renderDex();
+  renderCoverage();
+  renderTypeFilterButtons();
 }
 
-async function batchTypes(start, end) {
+async function loadTypeBatch(start) {
+  const end = Math.min(start + 100, allPokemon.length);
   await Promise.allSettled(allPokemon.slice(start, end).map(loadTypes));
-  renderPokeList();
+  // refresh visible lists silently
+  refreshSbList();
+  refreshModalList();
+  if (end < allPokemon.length) setTimeout(() => loadTypeBatch(end), 50);
 }
 
 async function loadTypes(p) {
@@ -464,282 +619,496 @@ async function loadTypes(p) {
   } catch(e) {}
 }
 
-// EVO CHAIN
+// ── EVO CHAINS ────────────────────────────────────────────────────────────────
+
 async function getChain(id) {
-  if (evoChains[id]) return evoChains[id];
+  if (evoCache[id]) return evoCache[id];
   try {
-    const spec = await (await fetch(`${API}pokemon-species/${id}`)).json();
-    const cd   = await (await fetch(spec.evolution_chain.url)).json();
+    const spec  = await (await fetch(`${API}pokemon-species/${id}`)).json();
+    const chain = await (await fetch(spec.evolution_chain.url)).json();
     const ids = [];
     const walk = n => {
       const m = n?.species?.url?.match(/\/(\d+)\/$/);
       if (m) ids.push(+m[1]);
-      (n.evolves_to||[]).forEach(walk);
+      (n.evolves_to || []).forEach(walk);
     };
-    walk(cd.chain);
-    ids.forEach(i => { evoChains[i] = ids; });
+    walk(chain.chain);
+    ids.forEach(i => { evoCache[i] = ids; });
     return ids;
-  } catch(e) { evoChains[id] = [id]; return [id]; }
+  } catch(e) { evoCache[id] = [id]; return [id]; }
 }
 
-// WIZARD STEPS
-function renderWizardSteps() {
-  const container = document.getElementById('wizardSteps');
-  container.innerHTML = WIZARD_STEPS.map(step => {
-    const pid = wizardAnswers[step.id];
-    const p   = pid ? allPokemon.find(x => x.id === pid) : null;
-    const done = !!p, active = activeStepId === step.id;
-    return `<div class="wizard-step ${done?'done':''} ${active?'active':''}" data-step="${step.id}">
-      <div class="step-icon">${step.icon}</div>
-      <div class="step-text">
-        <div class="step-title">${step.title}</div>
-        ${done
-          ? `<div class="step-value">${cap(p.name)}</div>`
-          : `<div class="step-value empty">tap to pick…</div>`}
+// ── ADD TO DEX ────────────────────────────────────────────────────────────────
+
+async function addToDex(seedId) {
+  const p = allPokemon.find(x => x.id === seedId);
+  if (!p) return;
+  if (!p.loaded) await loadTypes(p);
+
+  const chain  = await getChain(seedId);
+  const inDex  = new Set(dex.map(x => x.id));
+  const toAdd  = chain.filter(i => i <= dexLimit && !inDex.has(i)).sort((a,b)=>a-b);
+
+  if (!toAdd.length) { toast('Already in dex!'); return; }
+  if (dex.length + toAdd.length > dexLimit) { toast(`Limit reached (${dexLimit})`); return; }
+
+  for (const cid of toAdd) {
+    const m = allPokemon.find(x => x.id === cid);
+    if (!m) continue;
+    if (!m.loaded) await loadTypes(m);
+    dex.push(m);
+  }
+
+  const names = toAdd.map(i => cap(allPokemon.find(x=>x.id===i)?.name||'')).join(', ');
+  toast(`Added ${names}`);
+  renderDex();
+  renderCoverage();
+  refreshSbList();
+  setTimeout(() => {
+    const a = document.getElementById('dexArea');
+    a.scrollTo({ top: a.scrollHeight, behavior: 'smooth' });
+  }, 60);
+}
+
+// ── WIZARD ────────────────────────────────────────────────────────────────────
+
+function renderWiz() {
+  const el = document.getElementById('wizSteps');
+  el.innerHTML = WIZARD_STEPS.map(s => {
+    const pid  = wizAnswers[s.id];
+    const p    = pid ? allPokemon.find(x => x.id === pid) : null;
+    const done = !!p, active = activeStep === s.id;
+    return `<div class="wiz-step ${done?'done':''} ${active?'active':''}" data-step="${s.id}">
+      <span class="ws-icon">${s.icon}</span>
+      <div class="ws-body">
+        <div class="ws-label">${s.label}</div>
+        <div class="ws-val ${done?'':'empty'}">${done ? cap(p.name) : 'tap to pick…'}</div>
       </div>
-      ${done ? '<div class="step-done-mark">✓</div>' : ''}
+      ${done ? '<span class="ws-check">✓</span>' : ''}
     </div>`;
   }).join('');
-  container.querySelectorAll('.wizard-step').forEach(el =>
+  el.querySelectorAll('.wiz-step').forEach(el =>
     el.addEventListener('click', () => openModal(el.dataset.step))
   );
 }
 
+// ── WIZARD MODAL ──────────────────────────────────────────────────────────────
+
 function openModal(stepId) {
-  activeStepId = stepId;
+  activeStep = stepId;
   const step = WIZARD_STEPS.find(s => s.id === stepId);
-  document.getElementById('modalTitle').textContent = step.title;
+  document.getElementById('modalTitle').textContent = step.label;
   document.getElementById('modalSub').textContent   = step.hint;
   document.getElementById('modalSearch').value      = '';
-  renderModalList('');
-  document.getElementById('wizardModalBg').classList.add('open');
-  document.getElementById('modalSearch').focus();
-  renderWizardSteps();
+  modalTypeFilter = new Set(step.types); // pre-filter to suggested types
+  renderModalTypeButtons();
+  rebuildModalPool();
+  renderModalList(true);
+  document.getElementById('modalBg').classList.add('open');
+  setTimeout(() => document.getElementById('modalSearch').focus(), 100);
+  renderWiz();
 }
 
 function closeModal() {
-  document.getElementById('wizardModalBg').classList.remove('open');
-  activeStepId = null;
-  renderWizardSteps();
+  document.getElementById('modalBg').classList.remove('open');
+  activeStep = null;
+  renderWiz();
 }
 
-function renderModalList(q) {
-  const step = WIZARD_STEPS.find(s => s.id === activeStepId);
-  if (!step) return;
-  const pool = allPokemon.slice(0, dexLimit);
-  let results;
-  if (q.trim()) {
-    results = pool.filter(p => p.name.includes(q.toLowerCase()) || String(p.id).includes(q));
-  } else if (step.types.length) {
-    const hinted = pool.filter(p => p.types.some(t => step.types.includes(t)));
-    const rest   = pool.filter(p => !p.types.some(t => step.types.includes(t)));
-    results = [...hinted, ...rest];
-  } else {
-    results = pool;
-  }
-  const list = document.getElementById('modalList');
-  list.innerHTML = results.slice(0, 100).map(p => {
-    const chips = p.types.map(t =>
-      `<span class="type-chip" style="background:var(--type-${t})">${t}</span>`
-    ).join('');
-    return `<div class="modal-row" data-id="${p.id}">
-      <img src="${p.spriteUrl}" alt="${p.name}" loading="lazy">
-      <span class="pnum">#${p.id}</span>
-      <span class="pname">${cap(p.name)}</span>
-      <span class="types">${chips}</span>
-    </div>`;
+function renderModalTypeButtons() {
+  const row = document.getElementById('modalTypes');
+  row.innerHTML = TYPES.map(t => {
+    const on = modalTypeFilter.has(t);
+    return `<button class="mtf ${on?'on':''}" data-t="${t}"
+      style="background:var(--type-${t})">${t}</button>`;
   }).join('');
-  list.querySelectorAll('.modal-row').forEach(el =>
-    el.addEventListener('click', () => pickWizard(+el.dataset.id))
-  );
-}
-
-async function pickWizard(id) {
-  wizardAnswers[activeStepId] = id;
-  closeModal();
-  await addToDexter([id]);
-}
-
-// ADD TO DEX
-async function addToDexter(ids) {
-  let added = [];
-  for (const id of ids) {
-    const p = allPokemon.find(x => x.id === id);
-    if (!p) continue;
-    if (!p.loaded) await loadTypes(p);
-    const chainIds = await getChain(id);
-    const inDex = new Set(dex.map(x => x.id));
-    const toAdd = chainIds.filter(i => i <= dexLimit && !inDex.has(i)).sort((a,b)=>a-b);
-    for (const cid of toAdd) {
-      const m = allPokemon.find(x => x.id === cid);
-      if (m) { if (!m.loaded) await loadTypes(m); dex.push(m); added.push(m); }
-    }
-  }
-  if (added.length) {
-    const names = added.map(p => cap(p.name)).join(', ');
-    showToast(`Added ${names}`);
-  } else {
-    showToast('Already in dex!');
-  }
-  renderWizardSteps();
-  renderDexGrid();
-  renderTypeChart();
-  renderPokeList();
-  setTimeout(() => {
-    const s = document.getElementById('dexScroll');
-    s.scrollTo({ top: s.scrollHeight, behavior: 'smooth' });
-  }, 80);
-}
-
-// MANUAL MODE
-function setMode(wizard) {
-  wizardMode = wizard;
-  document.getElementById('tabWizard').classList.toggle('active', wizard);
-  document.getElementById('tabManual').classList.toggle('active', !wizard);
-  document.getElementById('sidebar').style.display = wizard ? 'none' : 'flex';
-  document.getElementById('wizardPanel').style.display = wizard ? '' : 'none';
-  if (!wizard) renderPokeList();
-}
-
-function renderPokeList() {
-  if (wizardMode) return;
-  const q = document.getElementById('searchBox').value.toLowerCase().trim();
-  const pool = allPokemon.slice(0, dexLimit);
-  const inDex = new Set(dex.map(x => x.id));
-  const filtered = q ? pool.filter(p => p.name.includes(q) || String(p.id).includes(q)) : pool;
-  document.getElementById('pokeList').innerHTML = filtered.slice(0, 120).map(p =>
-    `<div class="poke-row ${inDex.has(p.id)?'in-dex':''}" data-id="${p.id}">
-      <img src="${p.spriteUrl}" alt="" loading="lazy">
-      <span class="pnum">#${p.id}</span>
-      <span class="pname">${cap(p.name)}</span>
-      ${inDex.has(p.id) ? '<span class="check">✓</span>' : ''}
-    </div>`
-  ).join('');
-  document.getElementById('pokeList').querySelectorAll('.poke-row').forEach(el => {
-    el.addEventListener('click', () => { selectedId = +el.dataset.id; renderPokeList(); });
-    el.addEventListener('dblclick', () => { selectedId = +el.dataset.id; addManual(); });
+  row.querySelectorAll('.mtf').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.t;
+      if (modalTypeFilter.has(t)) modalTypeFilter.delete(t);
+      else modalTypeFilter.add(t);
+      renderModalTypeButtons();
+      rebuildModalPool();
+      renderModalList(true);
+    });
   });
 }
 
-async function addManual() {
-  if (!selectedId) { showToast('Select a Pokémon first'); return; }
-  if (dex.length >= dexLimit) { showToast(`Limit reached (${dexLimit})`); return; }
-  await addToDexter([selectedId]);
+function rebuildModalPool() {
+  const q    = document.getElementById('modalSearch').value.trim().toLowerCase();
+  const pool = allPokemon.slice(0, dexLimit);
+  let filtered = pool;
+
+  if (modalTypeFilter.size > 0) {
+    filtered = pool.filter(p => p.types.some(t => modalTypeFilter.has(t)));
+  }
+  if (q) {
+    filtered = filtered.filter(p => p.name.includes(q) || String(p.id).includes(q));
+  }
+
+  // If type-filtered but empty (types not loaded yet), show all
+  if (filtered.length === 0 && modalTypeFilter.size > 0 && !q) {
+    filtered = pool;
+  }
+  modalPool  = filtered;
+  modalShown = 0;
 }
 
-// DEX GRID
-function renderDexGrid() {
-  document.getElementById('dexCount').textContent     = dex.length;
-  document.getElementById('dexLimitLabel').textContent = dexLimit;
+function renderModalList(reset) {
+  const list = document.getElementById('modalList');
+  if (reset) { list.innerHTML = ''; modalShown = 0; }
+  const slice = modalPool.slice(modalShown, modalShown + MODAL_PAGE);
+  modalShown += slice.length;
+
+  const frag = document.createDocumentFragment();
+  slice.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'm-row';
+    row.dataset.id = p.id;
+    const chips = p.types.map(t =>
+      `<span class="chip" style="background:var(--type-${t})">${t}</span>`
+    ).join('');
+    row.innerHTML = `<img src="${p.spriteUrl}" loading="lazy" alt="">
+      <span class="m-num">#${p.id}</span>
+      <span class="m-name">${cap(p.name)}</span>
+      <span class="m-chips">${chips}</span>`;
+    row.addEventListener('click', () => pickWiz(+row.dataset.id));
+    frag.appendChild(row);
+  });
+  list.appendChild(frag);
+}
+
+// Infinite scroll inside modal
+const modalObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting && modalShown < modalPool.length) {
+    renderModalList(false);
+  }
+}, { root: document.getElementById('modalList'), threshold: 0 });
+// observer target set after DOM ready
+
+async function pickWiz(id) {
+  wizAnswers[activeStep] = id;
+  closeModal();
+  await addToDex(id);
+}
+
+// ── SIDEBAR (MANUAL) ──────────────────────────────────────────────────────────
+
+function renderTypeFilterButtons() {
+  ['sbTypeFilters','drawerTypeFilters'].forEach(elId => {
+    const row = document.getElementById(elId);
+    if (!row) return;
+    row.innerHTML = TYPES.map(t =>
+      `<button class="tf" data-t="${t}" style="--type-bg:var(--type-${t});background:var(--type-${t})">${t}</button>`
+    ).join('');
+    row.querySelectorAll('.tf').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = btn.dataset.t;
+        if (sbTypeFilter.has(t)) sbTypeFilter.delete(t);
+        else sbTypeFilter.add(t);
+        renderTypeFilterButtons();
+        rebuildSbPool();
+        renderSbList(true);
+        rebuildSbPool2();
+        renderSbList2(true);
+      });
+    });
+    // reflect active state
+    row.querySelectorAll('.tf').forEach(btn => {
+      const t = btn.dataset.t;
+      const anyActive = sbTypeFilter.size > 0;
+      if (sbTypeFilter.has(t)) btn.classList.add('on');
+      else if (anyActive) btn.classList.add('off');
+    });
+  });
+}
+
+// Sidebar list — desktop
+let sbPool2 = []; let sbShown2 = 0;
+
+function rebuildSbPool() {
+  const q = document.getElementById('sbSearch')?.value.trim().toLowerCase() || '';
+  const pool = allPokemon.slice(0, dexLimit);
+  let filtered = sbTypeFilter.size > 0
+    ? pool.filter(p => p.types.some(t => sbTypeFilter.has(t)))
+    : pool;
+  if (q) filtered = filtered.filter(p => p.name.includes(q) || String(p.id).includes(q));
+  sbPool  = filtered; sbShown = 0;
+}
+function rebuildSbPool2() {
+  const q = document.getElementById('drawerSearch')?.value.trim().toLowerCase() || '';
+  const pool = allPokemon.slice(0, dexLimit);
+  let filtered = sbTypeFilter.size > 0
+    ? pool.filter(p => p.types.some(t => sbTypeFilter.has(t)))
+    : pool;
+  if (q) filtered = filtered.filter(p => p.name.includes(q) || String(p.id).includes(q));
+  sbPool2  = filtered; sbShown2 = 0;
+}
+
+function renderSbList(reset, listId='sbList') {
+  const list = document.getElementById(listId);
+  if (!list) return;
+  if (reset) { list.innerHTML = ''; sbShown = 0; }
+  const inDex = new Set(dex.map(x => x.id));
+  const slice = sbPool.slice(sbShown, sbShown + SB_PAGE);
+  sbShown += slice.length;
+  const frag = document.createDocumentFragment();
+  slice.forEach(p => {
+    const row = document.createElement('div');
+    row.className = `pk-row ${inDex.has(p.id)?'faded':''}`;
+    row.dataset.id = p.id;
+    const dots = p.types.map(t => `<span class="pk-type-dot" style="background:var(--type-${t})"></span>`).join('');
+    row.innerHTML = `<img src="${p.spriteUrl}" loading="lazy" alt="">
+      <span class="pk-num">#${p.id}</span>
+      <span class="pk-name">${cap(p.name)}</span>
+      <span class="pk-types">${dots}</span>
+      ${inDex.has(p.id)?'<span class="pk-check">✓</span>':''}`;
+    row.addEventListener('click', () => { selectedId = +row.dataset.id; });
+    row.addEventListener('dblclick', () => { selectedId = +row.dataset.id; doAddManual(); });
+    frag.appendChild(row);
+  });
+  list.appendChild(frag);
+}
+
+function renderSbList2(reset) {
+  const list = document.getElementById('drawerList');
+  if (!list) return;
+  if (reset) { list.innerHTML = ''; sbShown2 = 0; }
+  const inDex = new Set(dex.map(x => x.id));
+  const slice = sbPool2.slice(sbShown2, sbShown2 + SB_PAGE);
+  sbShown2 += slice.length;
+  const frag = document.createDocumentFragment();
+  slice.forEach(p => {
+    const row = document.createElement('div');
+    row.className = `pk-row ${inDex.has(p.id)?'faded':''}`;
+    row.dataset.id = p.id;
+    const dots = p.types.map(t => `<span class="pk-type-dot" style="background:var(--type-${t})"></span>`).join('');
+    row.innerHTML = `<img src="${p.spriteUrl}" loading="lazy" alt="">
+      <span class="pk-num">#${p.id}</span>
+      <span class="pk-name">${cap(p.name)}</span>
+      <span class="pk-types">${dots}</span>
+      ${inDex.has(p.id)?'<span class="pk-check">✓</span>':''}`;
+    row.addEventListener('click', () => { selectedId = +row.dataset.id; });
+    row.addEventListener('dblclick', () => { selectedId = +row.dataset.id; doAddManual(); closeDrawer(); });
+    frag.appendChild(row);
+  });
+  list.appendChild(frag);
+}
+
+function refreshSbList() {
+  if (wizMode) return;
+  rebuildSbPool(); renderSbList(true);
+  rebuildSbPool2(); renderSbList2(true);
+}
+
+async function doAddManual() {
+  if (!selectedId) { toast('Tap a Pokémon first'); return; }
+  await addToDex(selectedId);
+}
+
+// ── MODE SWITCH ───────────────────────────────────────────────────────────────
+
+function setMode(wizard) {
+  wizMode = wizard;
+  document.getElementById('tabWiz').classList.toggle('on', wizard);
+  document.getElementById('tabMan').classList.toggle('on', !wizard);
+  document.getElementById('sidebar').style.display   = (!wizard && window.innerWidth > 640) ? 'flex' : 'none';
+  document.getElementById('wizPanel').style.display  = wizard ? '' : 'none';
+  // FAB only in manual on mobile
+  document.getElementById('fab').style.display       = (!wizard && window.innerWidth <= 640) ? 'flex' : 'none';
+  if (!wizard) { rebuildSbPool(); renderSbList(true); rebuildSbPool2(); renderSbList2(true); }
+}
+
+// ── DEX GRID ─────────────────────────────────────────────────────────────────
+
+function renderDex() {
+  document.getElementById('dexCount').textContent  = dex.length;
+  document.getElementById('dexLimit2').textContent = dexLimit;
   const grid = document.getElementById('dexGrid');
   grid.innerHTML = '';
 
   if (!dex.length) {
-    const empty = document.createElement('div');
-    empty.className = 'empty-state';
-    empty.innerHTML = `<div class="big">🌐</div>
-      <p>Tap a slot above to start building your regional Pokédex.</p>`;
-    grid.appendChild(empty);
-    return;
+    const e = document.createElement('div'); e.className = 'empty-state';
+    e.innerHTML = `<div class="big">🌐</div><p>Tap a wizard slot — or switch to Manual — to start filling your dex.</p>`;
+    grid.appendChild(e); return;
   }
 
   dex.forEach((p, i) => {
     const card = document.createElement('div');
-    card.className = 'dex-card';
-    card.draggable = true;
-    card.dataset.idx = i;
-    card.innerHTML = `<div class="card-num">${String(i+1).padStart(3,'0')}</div>
-      <img src="${p.spriteUrl}" alt="${p.name}" loading="lazy">
-      <div class="card-name">${cap(p.name)}</div>
-      <button class="remove-x" data-idx="${i}">✕</button>`;
-    card.addEventListener('dragstart', e => { dragSrcIdx=i; card.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
-    card.addEventListener('dragover',  e => { e.preventDefault(); clearDrag(); card.classList.add('drag-over'); });
+    card.className = 'dex-card'; card.draggable = true; card.dataset.idx = i;
+    card.innerHTML = `<div class="dc-num">${String(i+1).padStart(3,'0')}</div>
+      <img class="dc-img" src="${p.spriteUrl}" loading="lazy" alt="${p.name}">
+      <div class="dc-name">${cap(p.name)}</div>
+      <button class="dc-rm" data-i="${i}" aria-label="Remove">✕</button>`;
+    card.addEventListener('dragstart', e => { dragSrc=i; card.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+    card.addEventListener('dragover',  e => { e.preventDefault(); clearDragOver(); card.classList.add('drag-over'); });
     card.addEventListener('drop',      e => { e.preventDefault(); doSwap(i); });
-    card.addEventListener('dragend',   () => { dragSrcIdx=null; clearDrag(); card.classList.remove('dragging'); });
-    addTouchDrag(card, i);
-    card.querySelector('.remove-x').addEventListener('click', e => {
+    card.addEventListener('dragend',   () => { dragSrc=null; clearDragOver(); card.classList.remove('dragging'); });
+    addTouch(card, i);
+    card.querySelector('.dc-rm').addEventListener('click', e => {
       e.stopPropagation();
-      dex.splice(+e.currentTarget.dataset.idx, 1);
-      renderDexGrid(); renderTypeChart(); renderPokeList(); renderWizardSteps();
+      dex.splice(+e.currentTarget.dataset.i, 1);
+      renderDex(); renderCoverage(); refreshSbList(); renderWiz();
     });
     grid.appendChild(card);
   });
 
-  const empties = Math.min(16, dexLimit - dex.length);
+  const empties = Math.min(12, Math.max(0, dexLimit - dex.length));
   for (let i = 0; i < empties; i++) {
-    const el = document.createElement('div'); el.className = 'empty-card'; el.textContent = '?';
-    grid.appendChild(el);
+    const e = document.createElement('div'); e.className='empty-card'; e.textContent='?';
+    grid.appendChild(e);
   }
 }
 
-function clearDrag() { document.querySelectorAll('.dex-card').forEach(c => c.classList.remove('drag-over')); }
+function clearDragOver() { document.querySelectorAll('.dex-card').forEach(c=>c.classList.remove('drag-over')); }
 
 function doSwap(ti) {
-  if (dragSrcIdx === null || dragSrcIdx === ti) return;
-  const m = dex.splice(dragSrcIdx, 1)[0]; dex.splice(ti, 0, m);
-  renderDexGrid(); renderTypeChart();
+  if (dragSrc===null||dragSrc===ti) return;
+  const m=dex.splice(dragSrc,1)[0]; dex.splice(ti,0,m);
+  renderDex(); renderCoverage();
 }
 
-function addTouchDrag(el, idx) {
-  let src = null;
-  el.addEventListener('touchstart', () => { src=idx; el.style.opacity='.35'; }, {passive:true});
-  el.addEventListener('touchend', e => {
+function addTouch(el, idx) {
+  let src=null, startY=0;
+  el.addEventListener('touchstart', e=>{
+    src=idx; el.style.opacity='.3';
+    startY=e.touches[0].clientY;
+  },{passive:true});
+  el.addEventListener('touchmove', e=>{
+    // allow page scroll if dragging vertically more than 10px before touching a card
+  },{passive:true});
+  el.addEventListener('touchend', e=>{
     el.style.opacity='';
     const t=e.changedTouches[0];
     const target=document.elementFromPoint(t.clientX,t.clientY)?.closest('.dex-card');
-    if (target&&src!==null) { const ti=+target.dataset.idx; if(src!==ti){const m=dex.splice(src,1)[0];dex.splice(ti,0,m);renderDexGrid();renderTypeChart();} }
+    if(target&&src!==null){
+      const ti=+target.dataset.idx;
+      if(src!==ti){const m=dex.splice(src,1)[0];dex.splice(ti,0,m);renderDex();renderCoverage();}
+    }
     src=null;
-  }, {passive:true});
+  },{passive:true});
 }
 
-// TYPE CHART
-function renderTypeChart() {
+// ── COVERAGE ─────────────────────────────────────────────────────────────────
+
+function renderCoverage() {
   const counts = Object.fromEntries(TYPES.map(t=>[t,0]));
-  dex.forEach(p => (p.types||[]).forEach(t => { if(counts[t]!==undefined) counts[t]++; }));
-  document.getElementById('typeRow').innerHTML = TYPES.map(t =>
-    `<div class="type-pill ${counts[t]===0?'zero':''}" style="background:var(--type-${t})">
-      ${cap(t)}<span class="tcount">${counts[t]}</span></div>`
+  dex.forEach(p=>(p.types||[]).forEach(t=>{if(counts[t]!==undefined)counts[t]++;}));
+  document.getElementById('covGrid').innerHTML = TYPES.map(t=>
+    `<div class="cov-pill ${counts[t]===0?'zero':''}" style="background:var(--type-${t})">
+      ${cap(t)}<span class="cov-n">${counts[t]}</span></div>`
   ).join('');
 }
 
-// EXPORT
-document.getElementById('exportBtn').addEventListener('click', () => {
-  if (!dex.length) { showToast('Your dex is empty!'); return; }
-  const text = dex.map((p,i) => `${String(i+1).padStart(3,'0')}. ${cap(p.name)} (#${p.id})`).join('\n');
-  navigator.clipboard.writeText(text)
-    .then(()=>showToast(`Copied ${dex.length} Pokémon ✓`))
-    .catch(()=>{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast(`Copied ${dex.length} Pokémon ✓`);});
-});
+// ── DRAWER (mobile manual) ────────────────────────────────────────────────────
 
-// TOAST
-let _tt;
-function showToast(msg) {
-  const t=document.getElementById('toast'); t.textContent=msg;
-  t.classList.add('show'); clearTimeout(_tt);
-  _tt=setTimeout(()=>t.classList.remove('show'), 2400);
+function openDrawer() {
+  rebuildSbPool2(); renderSbList2(true);
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerBg').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerBg').classList.remove('open');
 }
 
-function cap(s){ return s?s[0].toUpperCase()+s.slice(1):''; }
+// ── INFINITE SCROLL ──────────────────────────────────────────────────────────
 
-// EVENTS
-document.getElementById('tabWizard').addEventListener('click', ()=>setMode(true));
-document.getElementById('tabManual').addEventListener('click', ()=>setMode(false));
-document.getElementById('searchBox').addEventListener('input', renderPokeList);
-document.getElementById('addBtn').addEventListener('click', addManual);
-document.getElementById('clearBtn').addEventListener('click', ()=>{
-  dex=[]; wizardAnswers={};
-  renderWizardSteps(); renderDexGrid(); renderTypeChart(); renderPokeList(); showToast('Cleared');
+function setupInfiniteScroll(listId, poolFn, shownFn, renderFn) {
+  const list = document.getElementById(listId);
+  if (!list) return;
+  list.addEventListener('scroll', () => {
+    if (list.scrollTop + list.clientHeight >= list.scrollHeight - 60) {
+      renderFn(false);
+    }
+  });
+}
+
+// ── LIMIT ─────────────────────────────────────────────────────────────────────
+
+function applyLimit(val) {
+  const v = Math.min(Math.max(+val||1, 1), 1025);
+  dexLimit = v;
+  document.getElementById('limitInput').value       = v;
+  document.getElementById('limitInputMobile').value = v;
+  dex = dex.filter(p => p.id <= dexLimit);
+  renderDex(); renderCoverage(); refreshSbList(); toast(`Limit → ${v}`);
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+
+function exportDex() {
+  if (!dex.length) { toast('Your dex is empty!'); return; }
+  const text = dex.map((p,i)=>`${String(i+1).padStart(3,'0')}. ${cap(p.name)} (#${p.id})`).join('\n');
+  navigator.clipboard.writeText(text)
+    .then(()=>toast(`Copied ${dex.length} Pokémon ✓`))
+    .catch(()=>{
+      const ta=document.createElement('textarea');ta.value=text;
+      document.body.appendChild(ta);ta.select();document.execCommand('copy');
+      document.body.removeChild(ta);toast(`Copied ${dex.length} Pokémon ✓`);
+    });
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+
+let _tt;
+function toast(msg) {
+  const el=document.getElementById('toast'); el.textContent=msg;
+  el.classList.add('show'); clearTimeout(_tt);
+  _tt=setTimeout(()=>el.classList.remove('show'), 2500);
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+
+function cap(s){ return s ? s[0].toUpperCase()+s.slice(1) : ''; }
+
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+
+document.getElementById('tabWiz').addEventListener('click', ()=>setMode(true));
+document.getElementById('tabMan').addEventListener('click', ()=>setMode(false));
+document.getElementById('copyBtn').addEventListener('click', exportDex);
+
+// Limit inputs (header + mobile drawer)
+document.getElementById('limitInput').addEventListener('change', e=>applyLimit(e.target.value));
+document.getElementById('limitInputMobile').addEventListener('change', e=>applyLimit(e.target.value));
+
+// Sidebar desktop
+document.getElementById('sbSearch').addEventListener('input', ()=>{ rebuildSbPool(); renderSbList(true); });
+document.getElementById('sbAddBtn').addEventListener('click', doAddManual);
+document.getElementById('sbClearBtn').addEventListener('click', ()=>{
+  dex=[]; wizAnswers={}; renderDex(); renderCoverage(); refreshSbList(); renderWiz(); toast('Cleared');
 });
-document.getElementById('limitInput').addEventListener('change', e => {
-  const v=+e.target.value; if(!v||v<1){e.target.value=dexLimit;return;}
-  dexLimit=Math.min(v,1025); e.target.value=dexLimit;
-  dex=dex.filter(p=>p.id<=dexLimit);
-  if(dexLimit>allPokemon.length) batchTypes(allPokemon.length, dexLimit);
-  renderDexGrid(); renderTypeChart(); renderPokeList(); showToast(`Limit → ${dexLimit}`);
+setupInfiniteScroll('sbList');
+document.getElementById('sbList').addEventListener('scroll', ()=>{
+  const el=document.getElementById('sbList');
+  if(el.scrollTop+el.clientHeight>=el.scrollHeight-80){ renderSbList(false); }
 });
-document.getElementById('modalSearch').addEventListener('input', e=>renderModalList(e.target.value));
+
+// Drawer (mobile)
+document.getElementById('fab').addEventListener('click', openDrawer);
+document.getElementById('drawerBg').addEventListener('click', closeDrawer);
+document.getElementById('drawerSearch').addEventListener('input', ()=>{ rebuildSbPool2(); renderSbList2(true); });
+document.getElementById('drawerAddBtn').addEventListener('click', ()=>{ doAddManual(); closeDrawer(); });
+document.getElementById('drawerClearBtn').addEventListener('click', ()=>{
+  dex=[]; wizAnswers={}; renderDex(); renderCoverage(); refreshSbList(); renderWiz(); closeDrawer(); toast('Cleared');
+});
+document.getElementById('drawerList').addEventListener('scroll', ()=>{
+  const el=document.getElementById('drawerList');
+  if(el.scrollTop+el.clientHeight>=el.scrollHeight-80){ renderSbList2(false); }
+});
+
+// Modal
+document.getElementById('modalSearch').addEventListener('input', ()=>{ rebuildModalPool(); renderModalList(true); });
 document.getElementById('modalSkip').addEventListener('click', closeModal);
-document.getElementById('wizardModalBg').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('modalBg').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('modalList').addEventListener('scroll', ()=>{
+  const el=document.getElementById('modalList');
+  if(el.scrollTop+el.clientHeight>=el.scrollHeight-80 && modalShown<modalPool.length){
+    renderModalList(false);
+  }
+});
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
 
 init();
 </script>
