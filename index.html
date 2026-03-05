@@ -1,1116 +1,1074 @@
 <!DOCTYPE html>
 
-<html lang="en" style="color-scheme:dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Pokédex Builder</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pokédex Forge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root {
-–bg:        #0c0c0e;
-–surface:   #141417;
-–surface2:  #1c1c22;
-–surface3:  #242430;
-–border:    #28282f;
-–border2:   #38383f;
-–text:      #ebebf5;
-–text2:     #a0a0b8;
-–muted:     #60607a;
-–accent:    #7c6fff;
-–accent-bg: rgba(124,111,255,0.12);
-–red:       #ff4f64;
-–r:         10px;
-–r-sm:      7px;
+  --bg: #0f1119;
+  --bg2: #181b27;
+  --bg3: #1e2233;
+  --surface: #252a3a;
+  --border: #2e3450;
+  --text: #e8eaf0;
+  --text2: #9ca3bf;
+  --accent: #e8453c;
+  --accent2: #ff6b63;
+  --accent-glow: rgba(232,69,60,0.25);
+  --success: #34d399;
+  --warn: #fbbf24;
+  --radius: 8px;
+  --font-display: 'Chakra Petch', sans-serif;
+  --font-body: 'Outfit', sans-serif;
 
-–type-normal:   #8a8a8a;
-–type-fire:     #e8652a;
-–type-water:    #3a82d4;
-–type-electric: #c8a800;
-–type-grass:    #5a9e30;
-–type-ice:      #3aaecc;
-–type-fighting: #b84020;
-–type-poison:   #8840a8;
-–type-ground:   #907830;
-–type-flying:   #5870b8;
-–type-psychic:  #d84090;
-–type-bug:      #607828;
-–type-rock:     #887820;
-–type-ghost:    #5040a0;
-–type-dragon:   #3050d8;
-–type-dark:     #505050;
-–type-steel:    #6878a0;
-–type-fairy:    #c060a8;
+/* Pokemon type colors */
+–type-normal: #a8a878; –type-fire: #f08030; –type-water: #6890f0;
+–type-electric: #f8d030; –type-grass: #78c850; –type-ice: #98d8d8;
+–type-fighting: #c03028; –type-poison: #a040a0; –type-ground: #e0c068;
+–type-flying: #a890f0; –type-psychic: #f85888; –type-bug: #a8b820;
+–type-rock: #b8a038; –type-ghost: #705898; –type-dragon: #7038f8;
+–type-dark: #705848; –type-steel: #b8b8d0; –type-fairy: #ee99ac;
 }
-
-html { height: 100%; }
-body {
-font-family: ‘DM Sans’, sans-serif;
-background: var(–bg);
-color: var(–text);
-min-height: 100%;
-font-size: 15px;
-line-height: 1.5;
--webkit-font-smoothing: antialiased;
-/* Force dark on all native inputs */
-color-scheme: dark;
+html,body{height:100%;overflow:hidden}
+body{
+font-family:var(–font-body);
+background:var(–bg);
+color:var(–text);
+display:flex;
+flex-direction:column;
 }
-
-/* ── INPUTS forced dark ── */
-input, select, textarea, button {
-color-scheme: dark;
-font-family: ‘DM Sans’, sans-serif;
-}
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-input[type=number] { -moz-appearance: textfield; }
 
 /* ── HEADER ── */
-.hdr {
-position: sticky; top: 0; z-index: 200;
-background: rgba(12,12,14,0.92);
-backdrop-filter: blur(14px);
--webkit-backdrop-filter: blur(14px);
+header {
+background: var(–bg2);
 border-bottom: 1px solid var(–border);
-height: 52px;
-display: flex; align-items: center;
-padding: 0 16px; gap: 12px;
+padding: 12px 24px;
+display: flex;
+align-items: center;
+gap: 16px;
+flex-shrink: 0;
+z-index: 100;
 }
-.hdr-logo { font-size: 14px; font-weight: 600; letter-spacing: -.2px; white-space: nowrap; }
-.hdr-logo em { color: var(–accent); font-style: normal; }
-.hdr-tabs {
-display: flex; gap: 2px;
-background: var(–surface2);
-border-radius: 8px; padding: 3px; flex-shrink: 0;
+header h1 {
+font-family: var(–font-display);
+font-size: 1.4rem;
+font-weight: 700;
+letter-spacing: 2px;
+text-transform: uppercase;
+background: linear-gradient(135deg, var(–accent), #ff9472);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+white-space: nowrap;
 }
-.hdr-tab {
-padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;
-cursor: pointer; border: none; background: none; color: var(–muted);
-transition: background .15s, color .15s;
+.header-controls {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-left: auto;
+flex-wrap: wrap;
 }
-.hdr-tab.on { background: var(–surface3); color: var(–text); }
-.hdr-spacer { flex: 1; }
-.hdr-limit {
-display: flex; align-items: center; gap: 6px;
-font-size: 12px; color: var(–muted); flex-shrink: 0;
+.header-controls label {
+font-size: 0.8rem;
+color: var(–text2);
+display: flex;
+align-items: center;
+gap: 6px;
+white-space: nowrap;
 }
-.hdr-limit input {
-width: 46px; background: var(–surface2); border: 1px solid var(–border2);
-border-radius: 6px; color: var(–text); font-family: ‘DM Mono’, monospace;
-font-size: 13px; text-align: center; padding: 3px 4px;
+.header-controls input[type=“number”] {
+width: 60px;
+background: var(–bg3);
+border: 1px solid var(–border);
+color: var(–text);
+padding: 4px 8px;
+border-radius: var(–radius);
+font-family: var(–font-body);
+font-size: 0.85rem;
+text-align: center;
 }
-.hdr-limit input:focus { outline: none; border-color: var(–accent); }
-.btn-copy {
-padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500;
-cursor: pointer; border: none; background: var(–accent); color: #fff;
-transition: opacity .15s; white-space: nowrap; flex-shrink: 0;
+.header-controls input[type=“number”]:focus {
+outline: none;
+border-color: var(–accent);
+box-shadow: 0 0 0 2px var(–accent-glow);
 }
-.btn-copy:active { opacity: .75; }
-
-/* ── ROOT LAYOUT ──
-Desktop: sidebar left | main right
-Mobile:  stacked (picker drawer on top, grid below)
-*/
-.root {
-display: grid;
-grid-template-columns: 280px 1fr;
-height: calc(100dvh - 52px);
+.btn {
+font-family: var(–font-display);
+font-size: 0.8rem;
+font-weight: 600;
+letter-spacing: 1px;
+text-transform: uppercase;
+padding: 8px 16px;
+border: none;
+border-radius: var(–radius);
+cursor: pointer;
+transition: all 0.15s;
+white-space: nowrap;
 }
-
-/* ── SIDEBAR (manual) ── */
-.sidebar {
-border-right: 1px solid var(–border);
+.btn-primary {
+background: var(–accent);
+color: #fff;
+}
+.btn-primary:hover { background: var(–accent2); transform: translateY(-1px); }
+.btn-secondary {
 background: var(–surface);
-display: flex; flex-direction: column;
+color: var(–text);
+border: 1px solid var(–border);
+}
+.btn-secondary:hover { background: var(–bg3); border-color: var(–accent); }
+.btn-danger {
+background: transparent;
+color: var(–accent);
+border: 1px solid var(–accent);
+}
+.btn-danger:hover { background: var(–accent); color: #fff; }
+
+/* ── MAIN LAYOUT ── */
+.main-wrap {
+display: flex;
+flex: 1;
 overflow: hidden;
 }
-.sb-filters { padding: 10px 12px; border-bottom: 1px solid var(–border); display: flex; flex-direction: column; gap: 8px; }
 
-/* shared input style */
-.inp {
-width: 100%; background: var(–surface2);
-border: 1px solid var(–border2); border-radius: var(–r-sm);
-color: var(–text); font-size: 14px; padding: 8px 11px;
-transition: border-color .15s;
+/* ── LEFT PANEL: Selector ── */
+.panel-left {
+width: 320px;
+min-width: 260px;
+background: var(–bg2);
+border-right: 1px solid var(–border);
+display: flex;
+flex-direction: column;
+flex-shrink: 0;
+overflow: hidden;
 }
-.inp:focus { outline: none; border-color: var(–accent); }
-.inp::placeholder { color: var(–muted); }
+.search-area {
+padding: 16px;
+border-bottom: 1px solid var(–border);
+}
+.search-area input {
+width: 100%;
+padding: 10px 14px;
+background: var(–bg);
+border: 1px solid var(–border);
+border-radius: var(–radius);
+color: var(–text);
+font-family: var(–font-body);
+font-size: 0.9rem;
+}
+.search-area input:focus {
+outline: none;
+border-color: var(–accent);
+box-shadow: 0 0 0 2px var(–accent-glow);
+}
+.search-area input::placeholder { color: var(–text2); }
+.pokemon-list {
+flex: 1;
+overflow-y: auto;
+padding: 8px;
+}
+.pokemon-list::-webkit-scrollbar { width: 6px; }
+.pokemon-list::-webkit-scrollbar-track { background: transparent; }
+.pokemon-list::-webkit-scrollbar-thumb { background: var(–border); border-radius: 3px; }
 
-/* type filter buttons */
-.type-filters { display: flex; flex-wrap: wrap; gap: 4px; }
-.tf {
-font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 5px;
-color: rgba(255,255,255,.85); border: 2px solid transparent;
-cursor: pointer; transition: opacity .12s, border-color .12s;
-text-transform: uppercase; letter-spacing: .03em; line-height: 1.4;
-background: var(–type-bg, #555);
+.poke-option {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 8px 12px;
+border-radius: var(–radius);
+cursor: pointer;
+transition: background 0.12s;
+user-select: none;
+min-height: 44px;
 }
-.tf:hover { opacity: .8; }
-.tf.on { border-color: #fff; }
-.tf.off { opacity: .35; }
+.poke-option:hover { background: var(–surface); }
+.poke-option.selected { background: var(–bg3); border: 1px solid var(–accent); }
+.poke-option .poke-id {
+font-family: var(–font-display);
+font-size: 0.75rem;
+color: var(–text2);
+min-width: 36px;
+}
+.poke-option .poke-name {
+font-size: 0.9rem;
+font-weight: 500;
+text-transform: capitalize;
+flex: 1;
+}
+.poke-option .poke-types {
+display: flex;
+gap: 4px;
+}
+.type-dot {
+width: 10px; height: 10px;
+border-radius: 50%;
+flex-shrink: 0;
+}
+.poke-option .poke-add-icon {
+font-size: 1.1rem;
+color: var(–success);
+opacity: 0;
+transition: opacity 0.12s;
+}
+.poke-option:hover .poke-add-icon { opacity: 1; }
+.poke-option.in-dex .poke-name { color: var(–text2); text-decoration: line-through; }
+.poke-option.in-dex .poke-add-icon { display: none; }
+.evo-tag {
+font-size: 0.6rem;
+background: var(–accent);
+color: #fff;
+padding: 1px 5px;
+border-radius: 3px;
+font-weight: 600;
+letter-spacing: 0.5px;
+text-transform: uppercase;
+}
 
-/* pokemon rows */
-.sb-list { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
-.sb-list::-webkit-scrollbar { width: 3px; }
-.sb-list::-webkit-scrollbar-thumb { background: var(–border2); border-radius: 3px; }
-.pk-row {
-display: flex; align-items: center; gap: 9px;
-padding: 6px 12px; cursor: pointer; transition: background .1s;
-user-select: none; min-height: 44px;
+/* ── RIGHT PANEL: Dex Grid ── */
+.panel-right {
+flex: 1;
+display: flex;
+flex-direction: column;
+overflow: hidden;
 }
-.pk-row:active, .pk-row:hover { background: var(–surface2); }
-.pk-row.faded { opacity: .38; }
-.pk-row img { width: 34px; height: 34px; image-rendering: pixelated; flex-shrink: 0; }
-.pk-num { font-family: ‘DM Mono’, monospace; font-size: 11px; color: var(–muted); min-width: 28px; flex-shrink: 0; }
-.pk-name { font-size: 14px; flex: 1; }
-.pk-types { display: flex; gap: 3px; flex-shrink: 0; }
-.pk-type-dot { width: 8px; height: 8px; border-radius: 50%; }
-.pk-check { color: var(–accent); font-size: 13px; flex-shrink: 0; }
-.sb-footer {
-padding: 10px 12px; border-top: 1px solid var(–border);
-display: flex; flex-direction: column; gap: 6px;
-}
-.btn-add {
-padding: 10px; border-radius: var(–r-sm); font-size: 14px; font-weight: 500;
-cursor: pointer; border: none; background: var(–accent); color: #fff; transition: opacity .15s;
-}
-.btn-add:active { opacity: .75; }
-.btn-clr {
-padding: 8px; border-radius: var(–r-sm); font-size: 13px; font-weight: 500;
-cursor: pointer; border: 1px solid var(–border2); background: none; color: var(–muted);
-transition: color .15s, border-color .15s;
-}
-.btn-clr:active { color: var(–red); border-color: var(–red); }
 
-/* ── MAIN AREA ── */
-.main { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-
-/* ── WIZARD PANEL ── */
-.wiz-panel {
-background: var(–surface);
+/* Type Bar */
+.type-bar {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+padding: 12px 20px;
+background: var(–bg2);
 border-bottom: 1px solid var(–border);
 flex-shrink: 0;
-overflow-x: auto;
-overscroll-behavior-x: contain;
 }
-.wiz-inner {
-padding: 10px 14px;
-display: flex; gap: 6px;
-min-width: max-content;
+.type-chip {
+display: flex;
+align-items: center;
+gap: 5px;
+padding: 4px 10px;
+border-radius: 20px;
+font-size: 0.7rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+font-family: var(–font-display);
+background: var(–surface);
+border: 1px solid var(–border);
+color: var(–text2);
+transition: all 0.2s;
 }
-.wiz-step {
-display: flex; align-items: center; gap: 7px;
-background: var(–surface2); border: 1px solid var(–border);
-border-radius: var(–r-sm); padding: 7px 10px;
-cursor: pointer; transition: border-color .15s;
-min-width: 130px; max-width: 160px;
-white-space: nowrap; flex-shrink: 0;
+.type-chip .type-count {
+background: var(–bg);
+padding: 1px 6px;
+border-radius: 10px;
+font-size: 0.65rem;
 }
-.wiz-step:hover { border-color: var(–border2); }
-.wiz-step.done { border-color: rgba(124,111,255,.45); }
-.wiz-step.active { border-color: var(–accent); background: var(–accent-bg); }
-.ws-icon { font-size: 16px; flex-shrink: 0; }
-.ws-body { flex: 1; min-width: 0; }
-.ws-label { font-size: 10px; font-weight: 500; color: var(–muted); text-transform: uppercase; letter-spacing: .05em; }
-.ws-val { font-size: 12px; color: var(–text); overflow: hidden; text-overflow: ellipsis; }
-.ws-val.empty { color: var(–muted); font-style: italic; }
-.ws-check { color: var(–accent); font-size: 12px; flex-shrink: 0; }
+.type-chip.active {
+border-color: currentColor;
+color: var(–text);
+}
 
-/* ── DEX SCROLL AREA ── */
-.dex-area { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 14px 12px 80px; }
-.dex-area::-webkit-scrollbar { width: 3px; }
-.dex-area::-webkit-scrollbar-thumb { background: var(–border); border-radius: 3px; }
+/* Status bar */
+.status-bar {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 8px 20px;
+background: var(–bg2);
+border-bottom: 1px solid var(–border);
+flex-shrink: 0;
+font-size: 0.8rem;
+}
+.slot-counter {
+font-family: var(–font-display);
+font-weight: 700;
+font-size: 1rem;
+}
+.slot-counter .filled { color: var(–accent); }
+.slot-counter .total { color: var(–text2); }
+.progress-track {
+flex: 1;
+height: 4px;
+background: var(–bg);
+border-radius: 2px;
+overflow: hidden;
+max-width: 300px;
+}
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, var(–accent), #ff9472);
+border-radius: 2px;
+transition: width 0.3s ease;
+}
 
-.dex-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.dex-count { font-family: ‘DM Mono’, monospace; font-size: 12px; color: var(–muted); }
-.dex-count strong { color: var(–text); font-weight: 500; }
+/* Grid */
+.dex-grid-wrap {
+flex: 1;
+overflow-y: auto;
+padding: 20px;
+}
+.dex-grid-wrap::-webkit-scrollbar { width: 6px; }
+.dex-grid-wrap::-webkit-scrollbar-track { background: transparent; }
+.dex-grid-wrap::-webkit-scrollbar-thumb { background: var(–border); border-radius: 3px; }
 
 .dex-grid {
 display: grid;
-grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
-gap: 7px;
+grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+gap: 8px;
+max-width: 1200px;
 }
+.dex-slot {
+aspect-ratio: 1;
+border: 1px dashed var(–border);
+border-radius: var(–radius);
+display: flex;
+align-items: center;
+justify-content: center;
+position: relative;
+background: var(–bg2);
+transition: all 0.15s;
+}
+.dex-slot.empty .slot-num {
+font-family: var(–font-display);
+font-size: 0.75rem;
+color: var(–border);
+}
+.dex-slot.filled {
+border-style: solid;
+border-color: var(–border);
+cursor: grab;
+background: var(–bg3);
+}
+.dex-slot.filled:hover {
+border-color: var(–accent);
+box-shadow: 0 0 12px var(–accent-glow);
+z-index: 2;
+}
+.dex-slot.filled img {
+width: 70%;
+height: 70%;
+object-fit: contain;
+image-rendering: pixelated;
+pointer-events: none;
+}
+.dex-slot .slot-label {
+position: absolute;
+bottom: 2px;
+left: 0;
+right: 0;
+text-align: center;
+font-size: 0.55rem;
+font-weight: 600;
+text-transform: capitalize;
+color: var(–text2);
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+padding: 0 2px;
+}
+.dex-slot .slot-id {
+position: absolute;
+top: 2px;
+left: 4px;
+font-family: var(–font-display);
+font-size: 0.55rem;
+color: var(–text2);
+opacity: 0.6;
+}
+.dex-slot .remove-btn {
+position: absolute;
+top: -6px;
+right: -6px;
+width: 18px; height: 18px;
+background: var(–accent);
+color: #fff;
+border: 2px solid var(–bg);
+border-radius: 50%;
+font-size: 0.6rem;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+opacity: 0;
+transition: opacity 0.12s;
+z-index: 3;
+line-height: 1;
+}
+.dex-slot.filled:hover .remove-btn { opacity: 1; }
 
-/* card */
-.dex-card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: var(–r);
-padding: 8px 5px 7px;
-display: flex; flex-direction: column; align-items: center;
-position: relative; cursor: grab; user-select: none;
-transition: border-color .12s;
-animation: pop .22s cubic-bezier(.34,1.56,.64,1) both;
+/* Drag states */
+.dex-slot.drag-over {
+border-color: var(–success) !important;
+background: rgba(52,211,153,0.08);
 }
-@keyframes pop { from { opacity:0; transform:scale(.6); } to { opacity:1; transform:scale(1); } }
-.dex-card:hover { border-color: var(–border2); }
-.dex-card.dragging { opacity: .2; }
-.dex-card.drag-over { border-color: var(–accent); transform: scale(1.04); }
-.dc-num { font-family:‘DM Mono’,monospace; font-size:9px; color:var(–muted); align-self:flex-start; padding-left:2px; margin-bottom:2px; }
-.dc-img { width:60px; height:60px; image-rendering:pixelated; }
-.dc-name { font-size:10px; font-weight:500; text-align:center; margin-top:4px; line-height:1.25; color:var(–text); }
-.dc-rm {
-position:absolute; top:3px; right:5px;
-background:none; border:none; color:var(–muted);
-font-size:12px; cursor:pointer; line-height:1; padding:2px;
-transition:color .1s; min-width:20px; min-height:20px;
-display:flex; align-items:center; justify-content:center;
-}
-.dc-rm:hover { color:var(–red); }
+.dex-slot.dragging { opacity: 0.4; }
 
-.empty-card {
-border:1px dashed var(–border); border-radius:var(–r);
-min-height:100px; display:flex; align-items:center; justify-content:center;
-color:var(–border2); font-size:18px;
-}
+/* Empty state */
 .empty-state {
-grid-column:1/-1; display:flex; flex-direction:column; align-items:center;
-justify-content:center; gap:10px; min-height:200px;
-color:var(–muted); text-align:center; padding:30px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: 100%;
+color: var(–text2);
+text-align: center;
+padding: 40px;
 }
-.empty-state .big { font-size:40px; }
-.empty-state p { font-size:14px; max-width:240px; line-height:1.6; }
+.empty-state svg {
+width: 64px; height: 64px;
+margin-bottom: 16px;
+opacity: 0.3;
+}
+.empty-state h3 {
+font-family: var(–font-display);
+font-size: 1.1rem;
+margin-bottom: 8px;
+color: var(–text);
+}
+.empty-state p { font-size: 0.85rem; }
 
-/* ── TYPE COVERAGE ── */
-.coverage { margin-top:18px; }
-.cov-title { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:.06em; color:var(–muted); margin-bottom:9px; }
-.cov-grid { display:flex; flex-wrap:wrap; gap:5px; }
-.cov-pill {
-display:flex; align-items:center; gap:5px;
-padding:3px 9px; border-radius:5px; font-size:11px; font-weight:600;
-color:rgba(255,255,255,.9); text-transform:uppercase; letter-spacing:.03em;
+/* Loading */
+.loading-overlay {
+position: fixed;
+inset: 0;
+background: var(–bg);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+transition: opacity 0.4s;
 }
-.cov-pill.zero { opacity:.18; }
-.cov-n { background:rgba(0,0,0,.3); border-radius:3px; padding:0 4px; font-size:10px; min-width:16px; text-align:center; }
+.loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.pokeball-spinner {
+width: 60px; height: 60px;
+border: 4px solid var(–border);
+border-top-color: var(–accent);
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+margin-top: 16px;
+font-family: var(–font-display);
+color: var(–text2);
+font-size: 0.9rem;
+letter-spacing: 1px;
+}
 
-/* ── MODAL ── */
-.modal-bg {
-position:fixed; inset:0; z-index:400;
-background:rgba(0,0,0,.75); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
-display:flex; align-items:flex-end; justify-content:center;
-opacity:0; pointer-events:none; transition:opacity .2s;
-}
-@media (min-width:600px) {
-.modal-bg { align-items:center; }
-}
-.modal-bg.open { opacity:1; pointer-events:all; }
-.modal {
-background:var(–surface); border:1px solid var(–border2);
-border-radius:18px 18px 0 0; padding:20px 16px 32px;
-width:100%; max-width:480px;
-transform:translateY(24px); transition:transform .22s cubic-bezier(.34,1,.64,1);
-max-height:90dvh; display:flex; flex-direction:column; gap:0;
-}
-@media (min-width:600px) {
-.modal { border-radius:16px; max-height:82vh; }
-}
-.modal-bg.open .modal { transform:translateY(0); }
-.modal-drag { width:36px; height:4px; background:var(–border2); border-radius:2px; margin:0 auto 14px; flex-shrink:0; }
-@media (min-width:600px) { .modal-drag { display:none; } }
-.modal-title { font-size:18px; font-weight:600; margin-bottom:2px; }
-.modal-sub { font-size:13px; color:var(–text2); margin-bottom:12px; line-height:1.5; }
-
-/* type filter row in modal */
-.modal-types { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px; flex-shrink:0; }
-.mtf {
-font-size:10px; font-weight:600; padding:3px 8px; border-radius:5px;
-color:rgba(255,255,255,.85); border:2px solid transparent;
-cursor:pointer; text-transform:uppercase; letter-spacing:.03em; line-height:1.4;
-transition:opacity .1s, border-color .1s;
-}
-.mtf:hover { opacity:.8; }
-.mtf.on { border-color:#fff; }
-
-.modal-search { flex-shrink:0; margin-bottom:8px; }
-.modal-list { overflow-y:auto; flex:1; overscroll-behavior:contain; }
-.modal-list::-webkit-scrollbar { width:3px; }
-.modal-list::-webkit-scrollbar-thumb { background:var(–border2); border-radius:3px; }
-.m-row {
-display:flex; align-items:center; gap:9px;
-padding:7px 6px; border-radius:var(–r-sm);
-cursor:pointer; transition:background .1s; min-height:48px;
-}
-.m-row:hover, .m-row:active { background:var(–surface2); }
-.m-row img { width:42px; height:42px; image-rendering:pixelated; flex-shrink:0; }
-.m-num { font-family:‘DM Mono’,monospace; font-size:11px; color:var(–muted); min-width:30px; flex-shrink:0; }
-.m-name { font-size:15px; flex:1; }
-.m-chips { display:flex; gap:3px; flex-shrink:0; }
-.chip { font-size:10px; font-weight:600; padding:2px 6px; border-radius:4px; color:#fff; text-transform:uppercase; letter-spacing:.03em; }
-
-/* load-more sentinel */
-.sentinel { height:1px; }
-
-.modal-skip {
-margin-top:10px; width:100%; padding:10px; border-radius:var(–r-sm);
-font-size:13px; font-weight:500; cursor:pointer;
-border:1px solid var(–border2); background:none; color:var(–muted);
-flex-shrink:0; transition:color .15s;
-}
-.modal-skip:active { color:var(–text); }
-
-/* ── MOBILE DRAWER ──
-On mobile the sidebar becomes a bottom sheet toggled by a FAB
-*/
-.fab {
-display:none;
-position:fixed; bottom:20px; right:16px; z-index:300;
-width:52px; height:52px; border-radius:50%;
-background:var(–accent); border:none; color:#fff;
-font-size:22px; cursor:pointer; box-shadow:0 4px 20px rgba(0,0,0,.4);
-align-items:center; justify-content:center;
-transition:transform .15s;
-}
-.fab:active { transform:scale(.92); }
-
-.drawer-bg {
-display:none;
-position:fixed; inset:0; z-index:250;
-background:rgba(0,0,0,.6);
-}
-.drawer {
-position:fixed; bottom:0; left:0; right:0; z-index:260;
-background:var(–surface);
-border-radius:18px 18px 0 0;
-border-top:1px solid var(–border2);
-display:flex; flex-direction:column;
-max-height:70dvh;
-transform:translateY(100%);
-transition:transform .25s cubic-bezier(.34,1,.64,1);
-}
-.drawer.open { transform:translateY(0); }
-.drawer-handle { width:36px; height:4px; background:var(–border2); border-radius:2px; margin:10px auto 8px; flex-shrink:0; }
-
-/* ── TOAST ── */
+/* Toast */
 .toast {
-position:fixed; bottom:24px; left:50%;
-transform:translateX(-50%) translateY(12px);
-background:var(–surface3); border:1px solid var(–border2);
-color:var(–text); padding:9px 18px; border-radius:10px;
-font-size:14px; font-weight:500; opacity:0;
-transition:all .22s; z-index:9999; white-space:nowrap;
-box-shadow:0 6px 24px rgba(0,0,0,.5); pointer-events:none;
+position: fixed;
+bottom: 24px;
+left: 50%;
+transform: translateX(-50%) translateY(80px);
+background: var(–surface);
+color: var(–text);
+padding: 12px 24px;
+border-radius: var(–radius);
+border: 1px solid var(–border);
+font-size: 0.85rem;
+z-index: 500;
+transition: transform 0.3s ease;
+pointer-events: none;
 }
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.show { transform: translateX(-50%) translateY(0); }
 
 /* ── RESPONSIVE ── */
-@media (max-width:640px) {
-.root { grid-template-columns:1fr; height:auto; min-height:calc(100dvh - 52px); }
-.sidebar { display:none; }
-.fab { display:flex; }
-.drawer-bg { display:block; opacity:0; pointer-events:none; transition:opacity .2s; }
-.drawer-bg.open { opacity:1; pointer-events:all; }
-.dex-grid { grid-template-columns:repeat(auto-fill,minmax(72px,1fr)); }
-.wiz-panel { -webkit-overflow-scrolling:touch; }
-.hdr-limit { display:none; }
-/* show limit inside drawer */
-.drawer-limit { display:flex !important; }
+@media (max-width: 900px) {
+.panel-left { width: 260px; min-width: 220px; }
+.dex-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
 }
-@media (min-width:641px) {
-.drawer, .drawer-bg, .fab { display:none !important; }
-.drawer-limit { display:none; }
+@media (max-width: 600px) {
+header { padding: 8px 12px; gap: 8px; flex-wrap: wrap; }
+header h1 { font-size: 1.1rem; }
+.header-controls { gap: 6px; }
+.btn { padding: 6px 10px; font-size: 0.7rem; }
+.main-wrap { flex-direction: column; }
+.panel-left {
+width: 100%;
+max-height: 45vh;
+border-right: none;
+border-bottom: 1px solid var(–border);
 }
-.drawer-limit {
-display:none; padding:0 12px 2px;
-align-items:center; gap:8px; font-size:13px; color:var(–muted);
+.dex-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 6px; }
+.type-bar { padding: 8px 12px; gap: 4px; }
+.type-chip { font-size: 0.6rem; padding: 3px 7px; }
+.dex-grid-wrap { padding: 12px; }
 }
-.drawer-limit input {
-width:50px; background:var(–surface2); border:1px solid var(–border2);
-border-radius:6px; color:var(–text); font-family:‘DM Mono’,monospace;
-font-size:13px; text-align:center; padding:4px 6px;
+@media (max-width: 380px) {
+.dex-grid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); }
+header h1 { font-size: 0.95rem; }
 }
-.drawer-limit input:focus { outline:none; border-color:var(–accent); }
+
+/* Landscape mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+.main-wrap { flex-direction: row; }
+.panel-left {
+width: 240px;
+max-height: none;
+border-right: 1px solid var(–border);
+border-bottom: none;
+}
+header { padding: 6px 16px; }
+header h1 { font-size: 1rem; }
+.type-bar { padding: 6px 12px; }
+.status-bar { padding: 4px 12px; }
+}
+
+/* Touch: always show remove buttons */
+@media (hover: none) {
+.dex-slot.filled .remove-btn { opacity: 1; }
+}
 </style>
 
 </head>
 <body>
 
-<!-- HEADER -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="pokeball-spinner"></div>
+  <div class="loading-text">Loading Pokémon data…</div>
+</div>
 
-<header class="hdr">
-  <div class="hdr-logo">pokédex <em>builder</em></div>
-  <div class="hdr-tabs">
-    <button class="hdr-tab on" id="tabWiz">Wizard</button>
-    <button class="hdr-tab" id="tabMan">Manual</button>
+<header>
+  <h1>Pokédex Forge</h1>
+  <div class="header-controls">
+    <label>
+      Dex Size
+      <input type="number" id="dexSizeInput" value="151" min="1" max="1025">
+    </label>
+    <button class="btn btn-primary" id="exportBtn" title="Copy dex list to clipboard">Export</button>
+    <button class="btn btn-danger" id="clearBtn">Clear</button>
   </div>
-  <div class="hdr-spacer"></div>
-  <div class="hdr-limit">
-    <span>Limit</span>
-    <input type="number" id="limitInput" value="151" min="1" max="1025">
-  </div>
-  <button class="btn-copy" id="copyBtn">Copy list</button>
 </header>
 
-<!-- ROOT GRID -->
-
-<div class="root">
-
-  <!-- SIDEBAR (desktop manual) -->
-
-  <aside class="sidebar" id="sidebar" style="display:none">
-    <div class="sb-filters">
-      <input class="inp" id="sbSearch" placeholder="Search name or #…" autocomplete="off">
-      <div class="type-filters" id="sbTypeFilters"></div>
+<div class="main-wrap">
+  <!-- LEFT: Pokemon Selector -->
+  <div class="panel-left">
+    <div class="search-area">
+      <input type="text" id="searchInput" placeholder="Search Pokémon by name or #…">
     </div>
-    <div class="sb-list" id="sbList"></div>
-    <div class="sb-footer">
-      <button class="btn-add" id="sbAddBtn">Add + evolutions</button>
-      <button class="btn-clr" id="sbClearBtn">Clear all</button>
+    <div class="pokemon-list" id="pokemonList"></div>
+  </div>
+
+  <!-- RIGHT: Dex Grid & Types -->
+
+  <div class="panel-right">
+    <div class="type-bar" id="typeBar"></div>
+    <div class="status-bar">
+      <span class="slot-counter">
+        <span class="filled" id="filledCount">0</span>
+        <span class="total">/ <span id="totalSlots">151</span></span>
+      </span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <button class="btn btn-secondary" id="sortByIdBtn" style="font-size:0.7rem;padding:4px 10px">Sort by #</button>
     </div>
-  </aside>
-
-  <!-- MAIN -->
-
-  <main class="main">
-
-```
-<!-- WIZARD BAR -->
-<div class="wiz-panel" id="wizPanel">
-  <div class="wiz-inner" id="wizSteps"></div>
-</div>
-
-<!-- DEX GRID -->
-<div class="dex-area" id="dexArea">
-  <div class="dex-hdr">
-    <div class="dex-count"><strong id="dexCount">0</strong> / <span id="dexLimit2">151</span></div>
-  </div>
-  <div class="dex-grid" id="dexGrid"></div>
-  <div class="coverage" id="coverage">
-    <div class="cov-title">Type coverage</div>
-    <div class="cov-grid" id="covGrid"></div>
-  </div>
-</div>
-```
-
-  </main>
-</div>
-
-<!-- MOBILE FAB -->
-
-<button class="fab" id="fab">＋</button>
-
-<!-- MOBILE DRAWER (manual) -->
-
-<div class="drawer-bg" id="drawerBg"></div>
-<div class="drawer" id="drawer">
-  <div class="drawer-handle"></div>
-  <div class="drawer-limit" id="drawerLimit">
-    <span>Limit</span>
-    <input type="number" id="limitInputMobile" value="151" min="1" max="1025">
-  </div>
-  <div class="sb-filters" style="padding:6px 12px 10px">
-    <input class="inp" id="drawerSearch" placeholder="Search name or #…" autocomplete="off">
-    <div class="type-filters" id="drawerTypeFilters"></div>
-  </div>
-  <div class="sb-list" id="drawerList" style="flex:1;overflow-y:auto;overscroll-behavior:contain"></div>
-  <div class="sb-footer">
-    <button class="btn-add" id="drawerAddBtn">Add + evolutions</button>
-    <button class="btn-clr" id="drawerClearBtn">Clear all</button>
-  </div>
-</div>
-
-<!-- WIZARD MODAL -->
-
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <div class="modal-drag"></div>
-    <div class="modal-title" id="modalTitle"></div>
-    <div class="modal-sub" id="modalSub"></div>
-    <div class="modal-types" id="modalTypes"></div>
-    <input class="inp modal-search" id="modalSearch" placeholder="Search…" autocomplete="off">
-    <div class="modal-list" id="modalList"></div>
-    <div class="sentinel" id="modalSentinel"></div>
-    <button class="modal-skip" id="modalSkip">Skip →</button>
+    <div class="dex-grid-wrap" id="dexGridWrap">
+      <div class="dex-grid" id="dexGrid"></div>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-'use strict';
+(() => {
+  // ── STATE ──
+  const ALL_TYPES = [
+    'normal','fire','water','electric','grass','ice',
+    'fighting','poison','ground','flying','psychic','bug',
+    'rock','ghost','dragon','dark','steel','fairy'
+  ];
 
-// ── CONSTANTS ──────────────────────────────────────────────────────────────────
+  let allPokemon = [];       // [{id, name, types, evoChainId}]
+  let evoChains = {};         // chainId -> [ids...]
+  let speciesChainMap = {};   // pokemonId -> chainId
+  let dexSlots = [];          // ordered array of pokemon ids in dex
+  let dexSize = 151;
+  let spriteCache = {};       // id -> spriteUrl (only fetched when added)
 
-const API    = 'https://pokeapi.co/api/v2/';
-const SPR    = id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-const TYPES  = ['normal','fire','water','electric','grass','ice','fighting','poison',
-                'ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+  const SPRITE_URL = id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
 
-const WIZARD_STEPS = [
-  {id:'grass',  icon:'🌿', label:'Grass starter',      hint:'The grass-type starter for your region',                    types:['grass']},
-  {id:'fire',   icon:'🔥', label:'Fire starter',        hint:'The fire-type starter Pokémon',                             types:['fire']},
-  {id:'water',  icon:'💧', label:'Water starter',       hint:'The water-type starter Pokémon',                            types:['water']},
-  {id:'bird',   icon:'🐦', label:'Early route bird',    hint:'The early flying-type (e.g. Pidgey, Starly, Taillow…)',    types:['flying']},
-  {id:'bug',    icon:'🐛', label:'Early route bug',     hint:'The early bug-type (e.g. Caterpie, Weedle, Wurmple…)',     types:['bug']},
-  {id:'rodent', icon:'🐭', label:'Route 1 rodent',      hint:'The small normal-type rodent (e.g. Rattata, Zigzagoon…)',  types:['normal']},
-  {id:'fossil', icon:'🦕', label:'Fossil Pokémon',      hint:'A revived fossil Pokémon (usually Rock-type)',             types:['rock']},
-  {id:'ghost',  icon:'👻', label:'Ghost-type',          hint:'Your region\'s ghost-type representative',                 types:['ghost']},
-  {id:'elec',   icon:'⚡', label:'Electric-type',       hint:'The electric-type of the region',                          types:['electric']},
-  {id:'ice',    icon:'🧊', label:'Ice-type',            hint:'Your region\'s ice-type Pokémon',                          types:['ice']},
-  {id:'pseudo', icon:'🐉', label:'Pseudo-legendary',    hint:'The 600-BST powerhouse (e.g. Dragonite, Tyranitar…)',     types:['dragon']},
-  {id:'legA',   icon:'✨', label:'Version legendary A', hint:'First version\'s box legendary',                           types:[]},
-  {id:'legB',   icon:'🌟', label:'Version legendary B', hint:'Second version\'s box legendary',                          types:[]},
-  {id:'myth',   icon:'🌈', label:'Mythical',            hint:'The event/mythical Pokémon for your region',               types:[]},
-];
+  // ── DOM REFS ──
+  const $loading = document.getElementById('loadingOverlay');
+  const $searchInput = document.getElementById('searchInput');
+  const $pokemonList = document.getElementById('pokemonList');
+  const $dexGrid = document.getElementById('dexGrid');
+  const $dexGridWrap = document.getElementById('dexGridWrap');
+  const $typeBar = document.getElementById('typeBar');
+  const $filledCount = document.getElementById('filledCount');
+  const $totalSlots = document.getElementById('totalSlots');
+  const $progressFill = document.getElementById('progressFill');
+  const $dexSizeInput = document.getElementById('dexSizeInput');
+  const $exportBtn = document.getElementById('exportBtn');
+  const $clearBtn = document.getElementById('clearBtn');
+  const $sortByIdBtn = document.getElementById('sortByIdBtn');
+  const $toast = document.getElementById('toast');
 
-// ── STATE ──────────────────────────────────────────────────────────────────────
+  // ── INIT ──
+  async function init() {
+    try {
+      // Fetch full pokemon list with types from PokeAPI
+      // We fetch all pokemon in one call (names + urls), then fetch types in batches
+      const listResp = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025');
+      const listData = await listResp.json();
 
-let allPokemon   = [];   // [{id, name, types[], spriteUrl, loaded, url}]
-let dex          = [];   // ordered Pokémon in builder
-let dexLimit     = 151;
-let wizMode      = true;
-let wizAnswers   = {};   // stepId → pokemonId
-let activeStep   = null;
-let selectedId   = null; // manual mode selection
-let evoCache     = {};   // id → [ids]
-let dragSrc      = null;
+      // Now fetch type info for each. Use the pokemon endpoint with type data.
+      // To avoid 1025 individual calls, we use the type endpoints instead.
+      // Each type endpoint lists all pokemon of that type.
+      const typePromises = ALL_TYPES.map(t =>
+        fetch(`https://pokeapi.co/api/v2/type/${t}`).then(r => r.json())
+      );
+      const typeResults = await Promise.all(typePromises);
 
-// modal virtual scroll
-let modalPool    = [];   // filtered list for modal
-let modalShown   = 0;
-const MODAL_PAGE = 40;
-
-// sidebar virtual scroll
-let sbPool       = [];
-let sbShown      = 0;
-const SB_PAGE    = 60;
-
-// type filters: null = all, Set = active types
-let sbTypeFilter    = new Set(); // empty = all
-let modalTypeFilter = new Set(); // empty = all (sidebar for wizard modal)
-
-// ── INIT ───────────────────────────────────────────────────────────────────────
-
-async function init() {
-  try {
-    const res  = await fetch(`${API}pokemon?limit=1025&offset=0`);
-    const data = await res.json();
-    allPokemon = data.results.map((p, i) => ({
-      id: i+1, name: p.name, types: [], spriteUrl: SPR(i+1),
-      loaded: false, url: p.url
-    }));
-    // load types in background batches of 100
-    loadTypeBatch(0);
-  } catch(e) {
-    toast('Could not load Pokémon — check your connection');
-  }
-  renderWiz();
-  renderDex();
-  renderCoverage();
-  renderTypeFilterButtons();
-}
-
-async function loadTypeBatch(start) {
-  const end = Math.min(start + 100, allPokemon.length);
-  await Promise.allSettled(allPokemon.slice(start, end).map(loadTypes));
-  // refresh visible lists silently
-  refreshSbList();
-  refreshModalList();
-  if (end < allPokemon.length) setTimeout(() => loadTypeBatch(end), 50);
-}
-
-async function loadTypes(p) {
-  if (p.loaded) return;
-  try {
-    const d = await (await fetch(p.url)).json();
-    p.types = d.types.map(t => t.type.name);
-    p.loaded = true;
-  } catch(e) {}
-}
-
-// ── EVO CHAINS ────────────────────────────────────────────────────────────────
-
-async function getChain(id) {
-  if (evoCache[id]) return evoCache[id];
-  try {
-    const spec  = await (await fetch(`${API}pokemon-species/${id}`)).json();
-    const chain = await (await fetch(spec.evolution_chain.url)).json();
-    const ids = [];
-    const walk = n => {
-      const m = n?.species?.url?.match(/\/(\d+)\/$/);
-      if (m) ids.push(+m[1]);
-      (n.evolves_to || []).forEach(walk);
-    };
-    walk(chain.chain);
-    ids.forEach(i => { evoCache[i] = ids; });
-    return ids;
-  } catch(e) { evoCache[id] = [id]; return [id]; }
-}
-
-// ── ADD TO DEX ────────────────────────────────────────────────────────────────
-
-async function addToDex(seedId) {
-  const p = allPokemon.find(x => x.id === seedId);
-  if (!p) return;
-  if (!p.loaded) await loadTypes(p);
-
-  const chain  = await getChain(seedId);
-  const inDex  = new Set(dex.map(x => x.id));
-  const toAdd  = chain.filter(i => i <= dexLimit && !inDex.has(i)).sort((a,b)=>a-b);
-
-  if (!toAdd.length) { toast('Already in dex!'); return; }
-  if (dex.length + toAdd.length > dexLimit) { toast(`Limit reached (${dexLimit})`); return; }
-
-  for (const cid of toAdd) {
-    const m = allPokemon.find(x => x.id === cid);
-    if (!m) continue;
-    if (!m.loaded) await loadTypes(m);
-    dex.push(m);
-  }
-
-  const names = toAdd.map(i => cap(allPokemon.find(x=>x.id===i)?.name||'')).join(', ');
-  toast(`Added ${names}`);
-  renderDex();
-  renderCoverage();
-  refreshSbList();
-  setTimeout(() => {
-    const a = document.getElementById('dexArea');
-    a.scrollTo({ top: a.scrollHeight, behavior: 'smooth' });
-  }, 60);
-}
-
-// ── WIZARD ────────────────────────────────────────────────────────────────────
-
-function renderWiz() {
-  const el = document.getElementById('wizSteps');
-  el.innerHTML = WIZARD_STEPS.map(s => {
-    const pid  = wizAnswers[s.id];
-    const p    = pid ? allPokemon.find(x => x.id === pid) : null;
-    const done = !!p, active = activeStep === s.id;
-    return `<div class="wiz-step ${done?'done':''} ${active?'active':''}" data-step="${s.id}">
-      <span class="ws-icon">${s.icon}</span>
-      <div class="ws-body">
-        <div class="ws-label">${s.label}</div>
-        <div class="ws-val ${done?'':'empty'}">${done ? cap(p.name) : 'tap to pick…'}</div>
-      </div>
-      ${done ? '<span class="ws-check">✓</span>' : ''}
-    </div>`;
-  }).join('');
-  el.querySelectorAll('.wiz-step').forEach(el =>
-    el.addEventListener('click', () => openModal(el.dataset.step))
-  );
-}
-
-// ── WIZARD MODAL ──────────────────────────────────────────────────────────────
-
-function openModal(stepId) {
-  activeStep = stepId;
-  const step = WIZARD_STEPS.find(s => s.id === stepId);
-  document.getElementById('modalTitle').textContent = step.label;
-  document.getElementById('modalSub').textContent   = step.hint;
-  document.getElementById('modalSearch').value      = '';
-  modalTypeFilter = new Set(step.types); // pre-filter to suggested types
-  renderModalTypeButtons();
-  rebuildModalPool();
-  renderModalList(true);
-  document.getElementById('modalBg').classList.add('open');
-  setTimeout(() => document.getElementById('modalSearch').focus(), 100);
-  renderWiz();
-}
-
-function closeModal() {
-  document.getElementById('modalBg').classList.remove('open');
-  activeStep = null;
-  renderWiz();
-}
-
-function renderModalTypeButtons() {
-  const row = document.getElementById('modalTypes');
-  row.innerHTML = TYPES.map(t => {
-    const on = modalTypeFilter.has(t);
-    return `<button class="mtf ${on?'on':''}" data-t="${t}"
-      style="background:var(--type-${t})">${t}</button>`;
-  }).join('');
-  row.querySelectorAll('.mtf').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const t = btn.dataset.t;
-      if (modalTypeFilter.has(t)) modalTypeFilter.delete(t);
-      else modalTypeFilter.add(t);
-      renderModalTypeButtons();
-      rebuildModalPool();
-      renderModalList(true);
-    });
-  });
-}
-
-function rebuildModalPool() {
-  const q    = document.getElementById('modalSearch').value.trim().toLowerCase();
-  const pool = allPokemon.slice(0, dexLimit);
-  let filtered = pool;
-
-  if (modalTypeFilter.size > 0) {
-    filtered = pool.filter(p => p.types.some(t => modalTypeFilter.has(t)));
-  }
-  if (q) {
-    filtered = filtered.filter(p => p.name.includes(q) || String(p.id).includes(q));
-  }
-
-  // If type-filtered but empty (types not loaded yet), show all
-  if (filtered.length === 0 && modalTypeFilter.size > 0 && !q) {
-    filtered = pool;
-  }
-  modalPool  = filtered;
-  modalShown = 0;
-}
-
-function renderModalList(reset) {
-  const list = document.getElementById('modalList');
-  if (reset) { list.innerHTML = ''; modalShown = 0; }
-  const slice = modalPool.slice(modalShown, modalShown + MODAL_PAGE);
-  modalShown += slice.length;
-
-  const frag = document.createDocumentFragment();
-  slice.forEach(p => {
-    const row = document.createElement('div');
-    row.className = 'm-row';
-    row.dataset.id = p.id;
-    const chips = p.types.map(t =>
-      `<span class="chip" style="background:var(--type-${t})">${t}</span>`
-    ).join('');
-    row.innerHTML = `<img src="${p.spriteUrl}" loading="lazy" alt="">
-      <span class="m-num">#${p.id}</span>
-      <span class="m-name">${cap(p.name)}</span>
-      <span class="m-chips">${chips}</span>`;
-    row.addEventListener('click', () => pickWiz(+row.dataset.id));
-    frag.appendChild(row);
-  });
-  list.appendChild(frag);
-}
-
-// Infinite scroll inside modal
-const modalObserver = new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting && modalShown < modalPool.length) {
-    renderModalList(false);
-  }
-}, { root: document.getElementById('modalList'), threshold: 0 });
-// observer target set after DOM ready
-
-async function pickWiz(id) {
-  wizAnswers[activeStep] = id;
-  closeModal();
-  await addToDex(id);
-}
-
-// ── SIDEBAR (MANUAL) ──────────────────────────────────────────────────────────
-
-function renderTypeFilterButtons() {
-  ['sbTypeFilters','drawerTypeFilters'].forEach(elId => {
-    const row = document.getElementById(elId);
-    if (!row) return;
-    row.innerHTML = TYPES.map(t =>
-      `<button class="tf" data-t="${t}" style="--type-bg:var(--type-${t});background:var(--type-${t})">${t}</button>`
-    ).join('');
-    row.querySelectorAll('.tf').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const t = btn.dataset.t;
-        if (sbTypeFilter.has(t)) sbTypeFilter.delete(t);
-        else sbTypeFilter.add(t);
-        renderTypeFilterButtons();
-        rebuildSbPool();
-        renderSbList(true);
-        rebuildSbPool2();
-        renderSbList2(true);
+      // Build type map: pokemonId -> [types]
+      const typeMap = {};
+      typeResults.forEach((typeData, i) => {
+        const typeName = ALL_TYPES[i];
+        typeData.pokemon.forEach(entry => {
+          const url = entry.pokemon.url;
+          const id = parseInt(url.split('/').filter(Boolean).pop());
+          if (!typeMap[id]) typeMap[id] = [];
+          typeMap[id].push(typeName);
+        });
       });
-    });
-    // reflect active state
-    row.querySelectorAll('.tf').forEach(btn => {
-      const t = btn.dataset.t;
-      const anyActive = sbTypeFilter.size > 0;
-      if (sbTypeFilter.has(t)) btn.classList.add('on');
-      else if (anyActive) btn.classList.add('off');
-    });
-  });
-}
 
-// Sidebar list — desktop
-let sbPool2 = []; let sbShown2 = 0;
+      // Build allPokemon from list
+      allPokemon = listData.results.map((p, idx) => {
+        const id = idx + 1;
+        return {
+          id,
+          name: p.name,
+          types: typeMap[id] || ['normal']
+        };
+      }).filter(p => p.id <= 1025);
 
-function rebuildSbPool() {
-  const q = document.getElementById('sbSearch')?.value.trim().toLowerCase() || '';
-  const pool = allPokemon.slice(0, dexLimit);
-  let filtered = sbTypeFilter.size > 0
-    ? pool.filter(p => p.types.some(t => sbTypeFilter.has(t)))
-    : pool;
-  if (q) filtered = filtered.filter(p => p.name.includes(q) || String(p.id).includes(q));
-  sbPool  = filtered; sbShown = 0;
-}
-function rebuildSbPool2() {
-  const q = document.getElementById('drawerSearch')?.value.trim().toLowerCase() || '';
-  const pool = allPokemon.slice(0, dexLimit);
-  let filtered = sbTypeFilter.size > 0
-    ? pool.filter(p => p.types.some(t => sbTypeFilter.has(t)))
-    : pool;
-  if (q) filtered = filtered.filter(p => p.name.includes(q) || String(p.id).includes(q));
-  sbPool2  = filtered; sbShown2 = 0;
-}
+      // Fetch evolution chains (species endpoint has chain refs)
+      // We batch-fetch species to get evolution_chain urls
+      // To keep load time reasonable, fetch first 1025 species in one call
+      const speciesResp = await fetch('https://pokeapi.co/api/v2/pokemon-species?limit=1025');
+      const speciesData = await speciesResp.json();
 
-function renderSbList(reset, listId='sbList') {
-  const list = document.getElementById(listId);
-  if (!list) return;
-  if (reset) { list.innerHTML = ''; sbShown = 0; }
-  const inDex = new Set(dex.map(x => x.id));
-  const slice = sbPool.slice(sbShown, sbShown + SB_PAGE);
-  sbShown += slice.length;
-  const frag = document.createDocumentFragment();
-  slice.forEach(p => {
-    const row = document.createElement('div');
-    row.className = `pk-row ${inDex.has(p.id)?'faded':''}`;
-    row.dataset.id = p.id;
-    const dots = p.types.map(t => `<span class="pk-type-dot" style="background:var(--type-${t})"></span>`).join('');
-    row.innerHTML = `<img src="${p.spriteUrl}" loading="lazy" alt="">
-      <span class="pk-num">#${p.id}</span>
-      <span class="pk-name">${cap(p.name)}</span>
-      <span class="pk-types">${dots}</span>
-      ${inDex.has(p.id)?'<span class="pk-check">✓</span>':''}`;
-    row.addEventListener('click', () => { selectedId = +row.dataset.id; });
-    row.addEventListener('dblclick', () => { selectedId = +row.dataset.id; doAddManual(); });
-    frag.appendChild(row);
-  });
-  list.appendChild(frag);
-}
+      // Fetch each species detail to get evo chain URL
+      // This is many calls... let's do it in batches of 50
+      const chainUrls = new Map(); // chainUrl -> chainId
+      const speciesDetails = [];
 
-function renderSbList2(reset) {
-  const list = document.getElementById('drawerList');
-  if (!list) return;
-  if (reset) { list.innerHTML = ''; sbShown2 = 0; }
-  const inDex = new Set(dex.map(x => x.id));
-  const slice = sbPool2.slice(sbShown2, sbShown2 + SB_PAGE);
-  sbShown2 += slice.length;
-  const frag = document.createDocumentFragment();
-  slice.forEach(p => {
-    const row = document.createElement('div');
-    row.className = `pk-row ${inDex.has(p.id)?'faded':''}`;
-    row.dataset.id = p.id;
-    const dots = p.types.map(t => `<span class="pk-type-dot" style="background:var(--type-${t})"></span>`).join('');
-    row.innerHTML = `<img src="${p.spriteUrl}" loading="lazy" alt="">
-      <span class="pk-num">#${p.id}</span>
-      <span class="pk-name">${cap(p.name)}</span>
-      <span class="pk-types">${dots}</span>
-      ${inDex.has(p.id)?'<span class="pk-check">✓</span>':''}`;
-    row.addEventListener('click', () => { selectedId = +row.dataset.id; });
-    row.addEventListener('dblclick', () => { selectedId = +row.dataset.id; doAddManual(); closeDrawer(); });
-    frag.appendChild(row);
-  });
-  list.appendChild(frag);
-}
+      // Actually, let's fetch species individually but cache chain URLs
+      // Use a smarter approach: fetch species in batches
+      const BATCH = 80;
+      for (let i = 0; i < speciesData.results.length; i += BATCH) {
+        const batch = speciesData.results.slice(i, i + BATCH);
+        const details = await Promise.all(
+          batch.map(s => fetch(s.url).then(r => r.json()).catch(() => null))
+        );
+        details.forEach(d => { if (d) speciesDetails.push(d); });
+      }
 
-function refreshSbList() {
-  if (wizMode) return;
-  rebuildSbPool(); renderSbList(true);
-  rebuildSbPool2(); renderSbList2(true);
-}
+      // Gather unique chain URLs
+      const uniqueChainUrls = new Set();
+      speciesDetails.forEach(s => {
+        if (s.evolution_chain?.url) {
+          uniqueChainUrls.add(s.evolution_chain.url);
+          const chainId = s.evolution_chain.url.split('/').filter(Boolean).pop();
+          speciesChainMap[s.id] = chainId;
+        }
+      });
 
-async function doAddManual() {
-  if (!selectedId) { toast('Tap a Pokémon first'); return; }
-  await addToDex(selectedId);
-}
+      // Fetch all evolution chains
+      const chainUrlArray = [...uniqueChainUrls];
+      for (let i = 0; i < chainUrlArray.length; i += BATCH) {
+        const batch = chainUrlArray.slice(i, i + BATCH);
+        const chains = await Promise.all(
+          batch.map(url => fetch(url).then(r => r.json()).catch(() => null))
+        );
+        chains.forEach(c => {
+          if (!c) return;
+          const chainId = c.id;
+          const ids = [];
+          function walk(node) {
+            const sid = parseInt(node.species.url.split('/').filter(Boolean).pop());
+            ids.push(sid);
+            node.evolves_to.forEach(walk);
+          }
+          walk(c.chain);
+          evoChains[chainId] = ids;
+        });
+      }
 
-// ── MODE SWITCH ───────────────────────────────────────────────────────────────
+      // Done loading
+      $loading.classList.add('hidden');
+      setTimeout(() => $loading.style.display = 'none', 500);
 
-function setMode(wizard) {
-  wizMode = wizard;
-  document.getElementById('tabWiz').classList.toggle('on', wizard);
-  document.getElementById('tabMan').classList.toggle('on', !wizard);
-  document.getElementById('sidebar').style.display   = (!wizard && window.innerWidth > 640) ? 'flex' : 'none';
-  document.getElementById('wizPanel').style.display  = wizard ? '' : 'none';
-  // FAB only in manual on mobile
-  document.getElementById('fab').style.display       = (!wizard && window.innerWidth <= 640) ? 'flex' : 'none';
-  if (!wizard) { rebuildSbPool(); renderSbList(true); rebuildSbPool2(); renderSbList2(true); }
-}
-
-// ── DEX GRID ─────────────────────────────────────────────────────────────────
-
-function renderDex() {
-  document.getElementById('dexCount').textContent  = dex.length;
-  document.getElementById('dexLimit2').textContent = dexLimit;
-  const grid = document.getElementById('dexGrid');
-  grid.innerHTML = '';
-
-  if (!dex.length) {
-    const e = document.createElement('div'); e.className = 'empty-state';
-    e.innerHTML = `<div class="big">🌐</div><p>Tap a wizard slot — or switch to Manual — to start filling your dex.</p>`;
-    grid.appendChild(e); return;
-  }
-
-  dex.forEach((p, i) => {
-    const card = document.createElement('div');
-    card.className = 'dex-card'; card.draggable = true; card.dataset.idx = i;
-    card.innerHTML = `<div class="dc-num">${String(i+1).padStart(3,'0')}</div>
-      <img class="dc-img" src="${p.spriteUrl}" loading="lazy" alt="${p.name}">
-      <div class="dc-name">${cap(p.name)}</div>
-      <button class="dc-rm" data-i="${i}" aria-label="Remove">✕</button>`;
-    card.addEventListener('dragstart', e => { dragSrc=i; card.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
-    card.addEventListener('dragover',  e => { e.preventDefault(); clearDragOver(); card.classList.add('drag-over'); });
-    card.addEventListener('drop',      e => { e.preventDefault(); doSwap(i); });
-    card.addEventListener('dragend',   () => { dragSrc=null; clearDragOver(); card.classList.remove('dragging'); });
-    addTouch(card, i);
-    card.querySelector('.dc-rm').addEventListener('click', e => {
-      e.stopPropagation();
-      dex.splice(+e.currentTarget.dataset.i, 1);
-      renderDex(); renderCoverage(); refreshSbList(); renderWiz();
-    });
-    grid.appendChild(card);
-  });
-
-  const empties = Math.min(12, Math.max(0, dexLimit - dex.length));
-  for (let i = 0; i < empties; i++) {
-    const e = document.createElement('div'); e.className='empty-card'; e.textContent='?';
-    grid.appendChild(e);
-  }
-}
-
-function clearDragOver() { document.querySelectorAll('.dex-card').forEach(c=>c.classList.remove('drag-over')); }
-
-function doSwap(ti) {
-  if (dragSrc===null||dragSrc===ti) return;
-  const m=dex.splice(dragSrc,1)[0]; dex.splice(ti,0,m);
-  renderDex(); renderCoverage();
-}
-
-function addTouch(el, idx) {
-  let src=null, startY=0;
-  el.addEventListener('touchstart', e=>{
-    src=idx; el.style.opacity='.3';
-    startY=e.touches[0].clientY;
-  },{passive:true});
-  el.addEventListener('touchmove', e=>{
-    // allow page scroll if dragging vertically more than 10px before touching a card
-  },{passive:true});
-  el.addEventListener('touchend', e=>{
-    el.style.opacity='';
-    const t=e.changedTouches[0];
-    const target=document.elementFromPoint(t.clientX,t.clientY)?.closest('.dex-card');
-    if(target&&src!==null){
-      const ti=+target.dataset.idx;
-      if(src!==ti){const m=dex.splice(src,1)[0];dex.splice(ti,0,m);renderDex();renderCoverage();}
+      renderPokemonList();
+      renderTypeBar();
+      renderDexGrid();
+      updateStatus();
+    } catch (err) {
+      console.error('Init error:', err);
+      $loading.querySelector('.loading-text').textContent =
+        'Failed to load data. Please refresh.';
     }
-    src=null;
-  },{passive:true});
-}
-
-// ── COVERAGE ─────────────────────────────────────────────────────────────────
-
-function renderCoverage() {
-  const counts = Object.fromEntries(TYPES.map(t=>[t,0]));
-  dex.forEach(p=>(p.types||[]).forEach(t=>{if(counts[t]!==undefined)counts[t]++;}));
-  document.getElementById('covGrid').innerHTML = TYPES.map(t=>
-    `<div class="cov-pill ${counts[t]===0?'zero':''}" style="background:var(--type-${t})">
-      ${cap(t)}<span class="cov-n">${counts[t]}</span></div>`
-  ).join('');
-}
-
-// ── DRAWER (mobile manual) ────────────────────────────────────────────────────
-
-function openDrawer() {
-  rebuildSbPool2(); renderSbList2(true);
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('drawerBg').classList.add('open');
-}
-function closeDrawer() {
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('drawerBg').classList.remove('open');
-}
-
-// ── INFINITE SCROLL ──────────────────────────────────────────────────────────
-
-function setupInfiniteScroll(listId, poolFn, shownFn, renderFn) {
-  const list = document.getElementById(listId);
-  if (!list) return;
-  list.addEventListener('scroll', () => {
-    if (list.scrollTop + list.clientHeight >= list.scrollHeight - 60) {
-      renderFn(false);
-    }
-  });
-}
-
-// ── LIMIT ─────────────────────────────────────────────────────────────────────
-
-function applyLimit(val) {
-  const v = Math.min(Math.max(+val||1, 1), 1025);
-  dexLimit = v;
-  document.getElementById('limitInput').value       = v;
-  document.getElementById('limitInputMobile').value = v;
-  dex = dex.filter(p => p.id <= dexLimit);
-  renderDex(); renderCoverage(); refreshSbList(); toast(`Limit → ${v}`);
-}
-
-// ── EXPORT ────────────────────────────────────────────────────────────────────
-
-function exportDex() {
-  if (!dex.length) { toast('Your dex is empty!'); return; }
-  const text = dex.map((p,i)=>`${String(i+1).padStart(3,'0')}. ${cap(p.name)} (#${p.id})`).join('\n');
-  navigator.clipboard.writeText(text)
-    .then(()=>toast(`Copied ${dex.length} Pokémon ✓`))
-    .catch(()=>{
-      const ta=document.createElement('textarea');ta.value=text;
-      document.body.appendChild(ta);ta.select();document.execCommand('copy');
-      document.body.removeChild(ta);toast(`Copied ${dex.length} Pokémon ✓`);
-    });
-}
-
-// ── TOAST ─────────────────────────────────────────────────────────────────────
-
-let _tt;
-function toast(msg) {
-  const el=document.getElementById('toast'); el.textContent=msg;
-  el.classList.add('show'); clearTimeout(_tt);
-  _tt=setTimeout(()=>el.classList.remove('show'), 2500);
-}
-
-// ── UTILS ─────────────────────────────────────────────────────────────────────
-
-function cap(s){ return s ? s[0].toUpperCase()+s.slice(1) : ''; }
-
-// ── EVENTS ────────────────────────────────────────────────────────────────────
-
-document.getElementById('tabWiz').addEventListener('click', ()=>setMode(true));
-document.getElementById('tabMan').addEventListener('click', ()=>setMode(false));
-document.getElementById('copyBtn').addEventListener('click', exportDex);
-
-// Limit inputs (header + mobile drawer)
-document.getElementById('limitInput').addEventListener('change', e=>applyLimit(e.target.value));
-document.getElementById('limitInputMobile').addEventListener('change', e=>applyLimit(e.target.value));
-
-// Sidebar desktop
-document.getElementById('sbSearch').addEventListener('input', ()=>{ rebuildSbPool(); renderSbList(true); });
-document.getElementById('sbAddBtn').addEventListener('click', doAddManual);
-document.getElementById('sbClearBtn').addEventListener('click', ()=>{
-  dex=[]; wizAnswers={}; renderDex(); renderCoverage(); refreshSbList(); renderWiz(); toast('Cleared');
-});
-setupInfiniteScroll('sbList');
-document.getElementById('sbList').addEventListener('scroll', ()=>{
-  const el=document.getElementById('sbList');
-  if(el.scrollTop+el.clientHeight>=el.scrollHeight-80){ renderSbList(false); }
-});
-
-// Drawer (mobile)
-document.getElementById('fab').addEventListener('click', openDrawer);
-document.getElementById('drawerBg').addEventListener('click', closeDrawer);
-document.getElementById('drawerSearch').addEventListener('input', ()=>{ rebuildSbPool2(); renderSbList2(true); });
-document.getElementById('drawerAddBtn').addEventListener('click', ()=>{ doAddManual(); closeDrawer(); });
-document.getElementById('drawerClearBtn').addEventListener('click', ()=>{
-  dex=[]; wizAnswers={}; renderDex(); renderCoverage(); refreshSbList(); renderWiz(); closeDrawer(); toast('Cleared');
-});
-document.getElementById('drawerList').addEventListener('scroll', ()=>{
-  const el=document.getElementById('drawerList');
-  if(el.scrollTop+el.clientHeight>=el.scrollHeight-80){ renderSbList2(false); }
-});
-
-// Modal
-document.getElementById('modalSearch').addEventListener('input', ()=>{ rebuildModalPool(); renderModalList(true); });
-document.getElementById('modalSkip').addEventListener('click', closeModal);
-document.getElementById('modalBg').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeModal(); });
-document.getElementById('modalList').addEventListener('scroll', ()=>{
-  const el=document.getElementById('modalList');
-  if(el.scrollTop+el.clientHeight>=el.scrollHeight-80 && modalShown<modalPool.length){
-    renderModalList(false);
   }
-});
 
-// ── BOOT ──────────────────────────────────────────────────────────────────────
+  // ── POKEMON LIST (left panel) ──
+  function renderPokemonList(filter = '') {
+    const filt = filter.toLowerCase().trim();
+    const fragment = document.createDocumentFragment();
 
-init();
+    const filtered = allPokemon.filter(p => {
+      if (!filt) return true;
+      if (p.name.includes(filt)) return true;
+      if (String(p.id) === filt || String(p.id).startsWith(filt)) return true;
+      return false;
+    });
+
+    filtered.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'poke-option' + (dexSlots.includes(p.id) ? ' in-dex' : '');
+      div.dataset.id = p.id;
+
+      const typeDots = p.types.map(t =>
+        `<span class="type-dot" style="background:var(--type-${t})" title="${t}"></span>`
+      ).join('');
+
+      div.innerHTML = `
+        <span class="poke-id">#${String(p.id).padStart(3,'0')}</span>
+        <span class="poke-name">${p.name}</span>
+        <span class="poke-types">${typeDots}</span>
+        <span class="poke-add-icon">+</span>
+      `;
+      div.addEventListener('click', () => addPokemonWithEvos(p.id));
+      fragment.appendChild(div);
+    });
+
+    $pokemonList.innerHTML = '';
+    $pokemonList.appendChild(fragment);
+  }
+
+  // ── ADD POKEMON + EVOLUTIONS ──
+  function addPokemonWithEvos(id) {
+    const chainId = speciesChainMap[id];
+    let toAdd = [id];
+
+    if (chainId && evoChains[chainId]) {
+      toAdd = evoChains[chainId].filter(eid => eid <= 1025);
+    }
+
+    // Filter out already added
+    toAdd = toAdd.filter(eid => !dexSlots.includes(eid));
+
+    // Check capacity
+    const slotsLeft = dexSize - dexSlots.length;
+    if (slotsLeft <= 0) {
+      showToast('Dex is full!');
+      return;
+    }
+    if (toAdd.length === 0) {
+      showToast('Already in your Dex');
+      return;
+    }
+
+    toAdd = toAdd.slice(0, slotsLeft);
+    dexSlots.push(...toAdd);
+
+    // Pre-load sprites for added mons only
+    toAdd.forEach(eid => { spriteCache[eid] = SPRITE_URL(eid); });
+
+    const mon = allPokemon.find(p => p.id === id);
+    if (toAdd.length > 1) {
+      showToast(`Added ${toAdd.length} Pokémon (${mon?.name} line)`);
+    } else {
+      showToast(`Added ${mon?.name}`);
+    }
+
+    renderDexGrid();
+    renderPokemonList($searchInput.value);
+    updateStatus();
+    renderTypeBar();
+  }
+
+  function removePokemon(id) {
+    dexSlots = dexSlots.filter(s => s !== id);
+    delete spriteCache[id];
+    renderDexGrid();
+    renderPokemonList($searchInput.value);
+    updateStatus();
+    renderTypeBar();
+  }
+
+  // ── DEX GRID ──
+  function renderDexGrid() {
+    $dexGrid.innerHTML = '';
+    const total = dexSize;
+
+    for (let i = 0; i < total; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'dex-slot';
+      slot.dataset.index = i;
+
+      if (i < dexSlots.length) {
+        const pid = dexSlots[i];
+        const mon = allPokemon.find(p => p.id === pid);
+        slot.classList.add('filled');
+        slot.draggable = true;
+        slot.dataset.pokeid = pid;
+
+        slot.innerHTML = `
+          <span class="slot-id">#${String(pid).padStart(3,'0')}</span>
+          <img src="${spriteCache[pid] || SPRITE_URL(pid)}" alt="${mon?.name}" loading="lazy">
+          <span class="slot-label">${mon?.name || ''}</span>
+          <span class="remove-btn" title="Remove">×</span>
+        `;
+
+        // Remove button
+        slot.querySelector('.remove-btn').addEventListener('click', e => {
+          e.stopPropagation();
+          removePokemon(pid);
+        });
+
+        // Drag events
+        slot.addEventListener('dragstart', onDragStart);
+        slot.addEventListener('dragend', onDragEnd);
+      } else {
+        slot.classList.add('empty');
+        slot.innerHTML = `<span class="slot-num">${i + 1}</span>`;
+      }
+
+      // Drop target
+      slot.addEventListener('dragover', onDragOver);
+      slot.addEventListener('dragenter', onDragEnter);
+      slot.addEventListener('dragleave', onDragLeave);
+      slot.addEventListener('drop', onDrop);
+
+      $dexGrid.appendChild(slot);
+    }
+  }
+
+  // ── DRAG & DROP ──
+  let dragSrcIndex = null;
+
+  function onDragStart(e) {
+    dragSrcIndex = parseInt(this.dataset.index);
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', dragSrcIndex);
+  }
+  function onDragEnd() {
+    this.classList.remove('dragging');
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+  }
+  function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  }
+  function onDragEnter(e) {
+    e.preventDefault();
+    this.classList.add('drag-over');
+  }
+  function onDragLeave() {
+    this.classList.remove('drag-over');
+  }
+  function onDrop(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    const targetIndex = parseInt(this.dataset.index);
+    if (dragSrcIndex === null || dragSrcIndex === targetIndex) return;
+    if (dragSrcIndex >= dexSlots.length) return;
+
+    // Reorder: remove from src, insert at target
+    const [moved] = dexSlots.splice(dragSrcIndex, 1);
+    const insertAt = Math.min(targetIndex, dexSlots.length);
+    dexSlots.splice(insertAt, 0, moved);
+
+    renderDexGrid();
+    dragSrcIndex = null;
+  }
+
+  // ── Touch drag support ──
+  let touchDragIndex = null;
+  let touchClone = null;
+  let touchStartY = 0;
+  let touchStartX = 0;
+  let touchMoved = false;
+
+  $dexGrid.addEventListener('touchstart', e => {
+    const slot = e.target.closest('.dex-slot.filled');
+    if (!slot || e.target.closest('.remove-btn')) return;
+    touchDragIndex = parseInt(slot.dataset.index);
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchMoved = false;
+  }, { passive: true });
+
+  $dexGrid.addEventListener('touchmove', e => {
+    if (touchDragIndex === null) return;
+    const dx = e.touches[0].clientX - touchStartX;
+    const dy = e.touches[0].clientY - touchStartY;
+    if (!touchMoved && Math.abs(dx) + Math.abs(dy) > 15) {
+      touchMoved = true;
+    }
+    if (!touchMoved) return;
+    e.preventDefault();
+
+    if (!touchClone) {
+      const src = $dexGrid.children[touchDragIndex];
+      touchClone = src.cloneNode(true);
+      touchClone.style.position = 'fixed';
+      touchClone.style.zIndex = 999;
+      touchClone.style.opacity = 0.8;
+      touchClone.style.pointerEvents = 'none';
+      touchClone.style.width = src.offsetWidth + 'px';
+      touchClone.style.height = src.offsetHeight + 'px';
+      document.body.appendChild(touchClone);
+      src.classList.add('dragging');
+    }
+    touchClone.style.left = (e.touches[0].clientX - 40) + 'px';
+    touchClone.style.top = (e.touches[0].clientY - 40) + 'px';
+
+    // Highlight target
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    const target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+    const targetSlot = target?.closest?.('.dex-slot');
+    if (targetSlot) targetSlot.classList.add('drag-over');
+  }, { passive: false });
+
+  $dexGrid.addEventListener('touchend', e => {
+    if (touchDragIndex === null) return;
+    if (touchClone) {
+      document.body.removeChild(touchClone);
+      touchClone = null;
+    }
+    document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+
+    if (touchMoved) {
+      const touch = e.changedTouches[0];
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      const targetSlot = target?.closest?.('.dex-slot');
+      if (targetSlot) {
+        const targetIndex = parseInt(targetSlot.dataset.index);
+        if (touchDragIndex !== targetIndex && touchDragIndex < dexSlots.length) {
+          const [moved] = dexSlots.splice(touchDragIndex, 1);
+          const insertAt = Math.min(targetIndex, dexSlots.length);
+          dexSlots.splice(insertAt, 0, moved);
+          renderDexGrid();
+        }
+      }
+    }
+    touchDragIndex = null;
+    touchMoved = false;
+  });
+
+  // ── TYPE BAR ──
+  function renderTypeBar() {
+    const counts = {};
+    ALL_TYPES.forEach(t => counts[t] = 0);
+    dexSlots.forEach(id => {
+      const mon = allPokemon.find(p => p.id === id);
+      if (mon) mon.types.forEach(t => { if (counts[t] !== undefined) counts[t]++; });
+    });
+
+    $typeBar.innerHTML = ALL_TYPES.map(t => `
+      <span class="type-chip${counts[t] > 0 ? ' active' : ''}" style="${counts[t] > 0 ? `color:var(--type-${t});border-color:var(--type-${t})` : ''}">
+        <span class="type-dot" style="background:var(--type-${t})"></span>
+        ${t}
+        <span class="type-count">${counts[t]}</span>
+      </span>
+    `).join('');
+  }
+
+  // ── STATUS ──
+  function updateStatus() {
+    const filled = dexSlots.length;
+    $filledCount.textContent = filled;
+    $totalSlots.textContent = dexSize;
+    $progressFill.style.width = `${Math.min(100, (filled / dexSize) * 100)}%`;
+  }
+
+  // ── EXPORT ──
+  $exportBtn.addEventListener('click', () => {
+    if (dexSlots.length === 0) {
+      showToast('Dex is empty');
+      return;
+    }
+    const lines = dexSlots.map((id, i) => {
+      const mon = allPokemon.find(p => p.id === id);
+      return `${String(i + 1).padStart(3, '0')}. ${mon?.name ? mon.name.charAt(0).toUpperCase() + mon.name.slice(1) : '???'} (#${id})`;
+    });
+    const text = `Pokédex (${dexSlots.length}/${dexSize})\n${'─'.repeat(30)}\n${lines.join('\n')}`;
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Copied to clipboard!');
+    }).catch(() => {
+      showToast('Copy failed – check permissions');
+    });
+  });
+
+  // ── CLEAR ──
+  $clearBtn.addEventListener('click', () => {
+    if (dexSlots.length === 0) return;
+    if (!confirm('Clear all Pokémon from your Dex?')) return;
+    dexSlots = [];
+    spriteCache = {};
+    renderDexGrid();
+    renderPokemonList($searchInput.value);
+    updateStatus();
+    renderTypeBar();
+    showToast('Dex cleared');
+  });
+
+  // ── SORT ──
+  $sortByIdBtn.addEventListener('click', () => {
+    if (dexSlots.length === 0) return;
+    dexSlots.sort((a, b) => a - b);
+    renderDexGrid();
+    showToast('Sorted by Pokédex number');
+  });
+
+  // ── DEX SIZE ──
+  $dexSizeInput.addEventListener('change', () => {
+    let val = parseInt($dexSizeInput.value);
+    if (isNaN(val) || val < 1) val = 1;
+    if (val > 1025) val = 1025;
+    $dexSizeInput.value = val;
+    dexSize = val;
+
+    // Trim slots if necessary
+    if (dexSlots.length > dexSize) {
+      const removed = dexSlots.splice(dexSize);
+      removed.forEach(id => delete spriteCache[id]);
+      renderPokemonList($searchInput.value);
+    }
+
+    renderDexGrid();
+    updateStatus();
+    renderTypeBar();
+  });
+
+  // ── SEARCH ──
+  let searchDebounce;
+  $searchInput.addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+      renderPokemonList($searchInput.value);
+    }, 150);
+  });
+
+  // ── TOAST ──
+  function showToast(msg) {
+    $toast.textContent = msg;
+    $toast.classList.add('show');
+    setTimeout(() => $toast.classList.remove('show'), 2000);
+  }
+
+  // GO
+  init();
+})();
 </script>
 
 </body>
