@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Custom Pokédex Builder</title>
+
+<style>
+body{
+font-family:Arial,Helvetica,sans-serif;
+margin:0;
+background:#f3f3f3;
+min-width:1200px;
+}
+
+#container{
+display:flex;
+height:100vh;
+}
+
+#left{
+width:260px;
+background:white;
+border-right:1px solid #ccc;
+padding:15px;
+box-sizing:border-box;
+}
+
+#right{
+flex:1;
+padding:15px;
+overflow:auto;
+}
+
+select,input,button{
+width:100%;
+margin-bottom:10px;
+padding:6px;
+}
+
+#dexGrid{
+display:grid;
+grid-template-columns:repeat(12,1fr);
+gap:8px;
+}
+
+.dexItem{
+background:white;
+border:1px solid #ccc;
+padding:6px;
+text-align:center;
+cursor:grab;
+}
+
+.dexItem img{
+width:72px;
+height:72px;
+image-rendering:pixelated;
+}
+
+#types{
+margin-top:20px;
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:6px;
+}
+
+.typeBox{
+background:white;
+border:1px solid #ccc;
+padding:6px;
+font-size:12px;
+text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div id="container">
+
+<div id="left">
+
+<label>Dex Size</label>
+<input id="dexSize" type="number" value="151">
+
+<select id="pokemonSelect"></select>
+
+<button onclick="addPokemon()">Add Pokémon</button>
+<button onclick="exportDex()">Export List</button>
+
+<div id="types"></div>
+
+</div>
+
+<div id="right">
+<div id="dexGrid"></div>
+</div>
+
+</div>
+
+<script>
+
+const API="https://pokeapi.co/api/v2"
+
+const dex=[]
+const pokemonCache={}
+const evolutionCache={}
+
+const types=[
+"normal","fire","water","electric","grass","ice",
+"fighting","poison","ground","flying","psychic",
+"bug","rock","ghost","dragon","dark","steel","fairy"
+]
+
+async function init(){
+
+const res=await fetch(API+"/pokemon?limit=2000")
+const data=await res.json()
+
+const select=document.getElementById("pokemonSelect")
+
+data.results.forEach((p,i)=>{
+const opt=document.createElement("option")
+opt.value=p.name
+opt.text=p.name
+select.appendChild(opt)
+})
+
+updateTypes()
+}
+
+async function getPokemon(name){
+
+if(pokemonCache[name]) return pokemonCache[name]
+
+const res=await fetch(API+"/pokemon/"+name)
+const data=await res.json()
+
+const info={
+name:data.name,
+id:data.id,
+types:data.types.map(t=>t.type.name)
+}
+
+pokemonCache[name]=info
+return info
+}
+
+async function getEvolutionChain(name){
+
+if(evolutionCache[name]) return evolutionCache[name]
+
+const speciesRes=await fetch(API+"/pokemon-species/"+name)
+const species=await speciesRes.json()
+
+const chainRes=await fetch(species.evolution_chain.url)
+const chainData=await chainRes.json()
+
+let chain=[]
+let node=chainData.chain
+
+while(node){
+chain.push(node.species.name)
+node=node.evolves_to[0]
+}
+
+chain.forEach(n=>evolutionCache[n]=chain)
+
+return chain
+}
+
+async function addPokemon(){
+
+const name=document.getElementById("pokemonSelect").value
+const max=parseInt(document.getElementById("dexSize").value)
+
+const chain=await getEvolutionChain(name)
+
+for(let n of chain){
+if(dex.length>=max) break
+if(!dex.includes(n)) dex.push(n)
+}
+
+renderDex()
+updateTypes()
+}
+
+async function renderDex(){
+
+const grid=document.getElementById("dexGrid")
+grid.innerHTML=""
+
+for(let i=0;i<dex.length;i++){
+
+const p=await getPokemon(dex[i])
+
+const div=document.createElement("div")
+div.className="dexItem"
+div.draggable=true
+div.dataset.index=i
+
+div.innerHTML=
+"<img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+p.id+".png'><br>"+p.name
+
+div.addEventListener("dragstart",dragStart)
+div.addEventListener("dragover",dragOver)
+div.addEventListener("drop",drop)
+
+grid.appendChild(div)
+}
+}
+
+let dragIndex
+
+function dragStart(e){
+dragIndex=e.target.dataset.index
+}
+
+function dragOver(e){
+e.preventDefault()
+}
+
+function drop(e){
+
+const target=e.target.closest(".dexItem")
+if(!target) return
+
+const targetIndex=target.dataset.index
+
+const temp=dex[dragIndex]
+dex.splice(dragIndex,1)
+dex.splice(targetIndex,0,temp)
+
+renderDex()
+}
+
+function exportDex(){
+
+const text=dex.join("\n")
+navigator.clipboard.writeText(text)
+alert("Copied to clipboard")
+}
+
+async function updateTypes(){
+
+const counts={}
+types.forEach(t=>counts[t]=0)
+
+for(let name of dex){
+
+const p=await getPokemon(name)
+
+p.types.forEach(t=>{
+counts[t]++
+})
+}
+
+const container=document.getElementById("types")
+container.innerHTML=""
+
+types.forEach(t=>{
+const div=document.createElement("div")
+div.className="typeBox"
+div.innerText=t+": "+counts[t]
+container.appendChild(div)
+})
+}
+
+init()
+
+</script>
+
+</body>
+</html>
